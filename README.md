@@ -59,3 +59,121 @@ This system improves efficiency, accountability, communication, and ensures that
 
 ## 📂 Project Folder Structure
 
+project-root/
+│
+├── backend/
+│ ├── backend/ # Django project settings
+│ ├── users/ # User authentication & roles
+│ ├── maintenance/ # Maintenance request module
+│ ├── assets/ # Asset tracking module
+│ ├── notifications/ # Notifications module
+│ ├── activity/ # System logs
+│ ├── env/ # Virtual environment
+│ └── requirements.txt
+│
+├── frontend/
+│ ├── src/
+│ │ ├── components/
+│ │ ├── pages/
+│ │ ├── context/
+│ │ └── utils/
+│ ├── public/
+│ └── package.json
+│
+└── README.md
+
+
+---
+
+## ⚙️ Installation & Setup
+
+### 🔽 Clone the Repository
+```bash
+git clone https://github.com/yourusername/maintenance-system.git
+cd maintenance-system
+🛠 Backend Setup (Django REST)
+1. Create and activate virtual environment
+python -m venv venv
+venv\Scripts\activate   # Windows
+source venv/bin/activate   # Mac/Linux
+2. Install dependencies
+pip install -r requirements.txt
+3. Configure PostgreSQL database in backend/settings.py
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'maintenance_db',
+        'USER': 'postgres',
+        'PASSWORD': 'your_password',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
+4. Apply migrations
+python manage.py makemigrations
+python manage.py migrate
+5. Start the backend server
+python manage.py runserver
+🌐 Frontend Setup (React)
+1. Install dependencies
+npm install
+2. Start the development server
+npm run dev
+🔌 API Endpoints Overview
+🔐 Authentication
+Method	Endpoint	Description
+POST	/api/users/register/	Register user
+POST	/api/users/login/	Login user (JWT)
+GET	/api/users/profile/	Get logged-in user info
+🛠 Maintenance Requests
+Method	Endpoint	Description
+POST	/api/maintenance/create/	Create maintenance request
+GET	/api/maintenance/all/	List all maintenance requests
+POST	/api/maintenance/assign/<id>/	Assign technician
+POST	/api/maintenance/update-status/<id>/	Update request status
+🖥 Asset Tracking
+Method	Endpoint	Description
+POST	/api/assets/create/	Register asset
+GET	/api/assets/all/	List assets
+PUT	/api/assets/update/<id>/	Update asset
+🔔 Notifications
+Method	Endpoint	Description
+GET	/api/notifications/my/	Retrieve user notifications
+POST	/api/notifications/mark-read/<id>/	Mark notification as read
+📋 Activity Logs (Admin Only)
+Method	Endpoint	Description
+GET	/api/activity/	List system activity logs
+🧪 Testing
+Run the Django test suite:
+
+python manage.py test
+🚀 Deployment
+Backend (Render, Railway, etc.)
+- Create service
+- Add environment variables
+- Connect PostgreSQL instance
+- Deploy from GitHub
+Frontend (Vercel, Netlify)
+npm run build
+Upload build folder
+Deploy automatically
+📘 Future Improvements
+SMS/Email notification integration
+
+QR code asset scanning
+
+Technician performance analytics dashboard
+
+Mobile app version
+
+Predictive maintenance (AI-based)
+
+🧑‍💻 Developers
+Benjamin — Lead Developer
+
+ChatGPT — Assistant
+
+📜 License
+This project is open-source and available under the MIT License.
+
+
