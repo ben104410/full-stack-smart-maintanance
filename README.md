@@ -101,12 +101,7 @@ pip install -r requirements.txt
 3. Configure PostgreSQL database in backend/settings.py
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'maintenance_db',
-        'USER': 'postgres',
-        'PASSWORD': 'your_password',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        
     }
 }
 4. Apply migrations
