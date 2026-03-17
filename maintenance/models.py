@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-
+from assets.models import Asset
 class MaintenanceRequest(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Pending'),
@@ -16,6 +16,8 @@ class MaintenanceRequest(models.Model):
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='requests', on_delete=models.CASCADE)
     assigned_to = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='assigned_tasks', null=True, blank=True, on_delete=models.SET_NULL)
+
+    asset = models.ForeignKey('assets.Asset', on_delete=models.SET_NULL, null=True, blank=True)
 
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)

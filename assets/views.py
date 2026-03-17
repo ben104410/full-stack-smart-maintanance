@@ -1,3 +1,45 @@
 from django.shortcuts import render
+from rest_framework import generics, permissions, filters
+from .models import Asset
+from .serializers import AssetSerializer
+from activity.models import ActivityLog
 
-# Create your views here.
+# Create asset (Admin only)
+class CreateAssetView(generics.CreateAPIView):
+    queryset = Asset.objects.all()
+    serializer_class = AssetSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
+
+        # Log activity
+        ActivityLog.objects.create(
+            user=self.request.user,
+            action="Created Asset",
+            details=f"Asset name: {serializer.validated_data.get('name')}"
+        )
+
+
+# List all assets
+class ListAssetsView(generics.ListAPIView):
+    queryset = Asset.objects.all().order_by('-created_at')
+    serializer_class = AssetSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['created_at', 'name']
+
+
+# Update asset info (Admin only)
+class UpdateAssetView(generics.UpdateAPIView):
+    queryset = Asset.objects.all()
+    serializer_class = AssetSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_update(self, serializer):
+        updated_asset = serializer.save()
+        ActivityLog.objects.create(
+            user=self.request.user,
+            action="Updated Asset",
+            details=f"Updated asset: {updated_asset.name}"
+        )

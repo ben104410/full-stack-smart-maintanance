@@ -1,11 +1,14 @@
+import csv
 from django.shortcuts import render
-from rest_framework import generics, permissions
+from django.http import HttpResponse
+from rest_framework import generics, permissions, filters
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from .models import MaintenanceRequest
 from .serializers import MaintenanceRequestSerializer
 from django.contrib.auth import get_user_model
 from notifications.models import Notification
+from activity.models import ActivityLog
 
 
 User = get_user_model()
@@ -16,7 +19,19 @@ class CreateRequestView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        request_obj = serializer.save(created_by=self.request.user)
+        asset_id = self.request.data.get("asset")
+
+        request_obj = serializer.save(
+            created_by=self.request.user,
+            asset_id=asset_id
+        )
+
+        # Log activity
+        ActivityLog.objects.create(
+            user=self.request.user,
+            action="Created Maintenance Request",
+            details=f"Request title: {request_obj.title}"
+        )
 
         # Notify admin(s)
         admins = User.objects.filter(role='admin')
@@ -32,6 +47,8 @@ class ListRequestsView(generics.ListAPIView):
     queryset = MaintenanceRequest.objects.all().order_by('-created_at')
     serializer_class = MaintenanceRequestSerializer
     permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['created_at', 'status']
 
 
 # 3. Assign Technician (Admin only)
@@ -52,6 +69,13 @@ def assign_technician(request, pk):
     maintenance.assigned_to = technician
     maintenance.status = 'assigned'
     maintenance.save()
+
+    # Log activity
+    ActivityLog.objects.create(
+        user=request.user,
+        action="Assigned Technician",
+        details=f"Task: {maintenance.title} assigned to {technician.username}"
+    )
 
     # Notify the assigned technician
     Notification.objects.create(
@@ -83,6 +107,13 @@ def update_status(request, pk):
     task.status = new_status
     task.save()
 
+    # Log activity
+    ActivityLog.objects.create(
+        user=request.user,
+        action="Updated Task Status",
+        details=f"Task: {task.title} status changed to {new_status.replace('_', ' ')}"
+    )
+
     # notify the requester about status change
     Notification.objects.create(
         user=task.created_by,
@@ -92,3 +123,24 @@ def update_status(request, pk):
     return Response({"message": "Status updated successfully"})
 
 
+# 5. Export maintenance requests to CSV (Admin only)
+@api_view(['GET'])
+@permission_classes([permissions.IsAdminUser])
+def export_requests_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="maintenance_requests.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Title', 'Status', 'Created By', 'Technician', 'Asset', 'Created At'])
+
+    for req in MaintenanceRequest.objects.all():
+        writer.writerow([
+            req.title,
+            req.status,
+            req.created_by.username,
+            req.assigned_to.username if req.assigned_to else '',
+            req.asset.name if req.asset else '',
+            req.created_at.strftime('%Y-%m-%d'),
+        ])
+
+    return response

@@ -4,6 +4,7 @@ from .models import MaintenanceRequest
 class MaintenanceRequestSerializer(serializers.ModelSerializer):
 	created_by_username = serializers.CharField(source='created_by.username', read_only=True)
 	assigned_to_username = serializers.CharField(source='assigned_to.username', read_only=True)
+	asset_name = serializers.CharField(source='asset.name', read_only=True)
 
 	class Meta:
 		model = MaintenanceRequest
