@@ -3,6 +3,9 @@ from rest_framework import generics, permissions, filters
 from .models import Asset
 from .serializers import AssetSerializer
 from activity.models import ActivityLog
+import qrcode
+from django.core.files.base import ContentFile
+from io import BytesIO
 
 # Create asset (Admin only)
 class CreateAssetView(generics.CreateAPIView):
@@ -11,7 +14,8 @@ class CreateAssetView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user)
+        asset = serializer.save(created_by=self.request.user)
+        generate_qr(asset)
 
         # Log activity
         ActivityLog.objects.create(
@@ -38,8 +42,16 @@ class UpdateAssetView(generics.UpdateAPIView):
 
     def perform_update(self, serializer):
         updated_asset = serializer.save()
+        generate_qr(updated_asset)
         ActivityLog.objects.create(
             user=self.request.user,
             action="Updated Asset",
             details=f"Updated asset: {updated_asset.name}"
         )
+
+
+def generate_qr(asset):
+    qr = qrcode.make(f"https://your-domain.com/api/assets/{asset.id}/")
+    stream = BytesIO()
+    qr.save(stream, format="PNG")
+    asset.qr_code.save(f"asset_{asset.id}_qr.png", ContentFile(stream.getvalue()))

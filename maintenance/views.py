@@ -9,6 +9,7 @@ from .serializers import MaintenanceRequestSerializer
 from django.contrib.auth import get_user_model
 from notifications.models import Notification
 from activity.models import ActivityLog
+from utils.email_service import send_notification
 
 
 User = get_user_model()
@@ -81,6 +82,13 @@ def assign_technician(request, pk):
     Notification.objects.create(
         user=technician,
         message=f"You have been assigned a maintenance task: {maintenance.title}"
+    )
+
+    # Send email notification
+    send_notification(
+        technician.email,
+        "New Maintenance Task Assigned",
+        f"You have been assigned a new task: {maintenance.title}"
     )
 
     return Response({"message": "Technician assigned successfully"})
