@@ -1,6 +1,7 @@
 import csv
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
+from django.utils import timezone
 from rest_framework import generics, permissions, filters
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -10,6 +11,8 @@ from django.contrib.auth import get_user_model
 from notifications.models import Notification
 from activity.models import ActivityLog
 from utils.email_service import send_notification
+from users.permissions import IsAdmin
+from datetime import timedelta
 
 
 User = get_user_model()
@@ -98,10 +101,7 @@ def assign_technician(request, pk):
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def update_status(request, pk):
-    try:
-        task = MaintenanceRequest.objects.get(id=pk)
-    except MaintenanceRequest.DoesNotExist:
-        return Response({"error": "Task not found"}, status=404)
+    task = get_object_or_404(MaintenanceRequest, pk=pk)
 
     # only assigned technician or admin can update status
     if request.user != task.assigned_to and not request.user.is_staff:
@@ -113,6 +113,11 @@ def update_status(request, pk):
         return Response({"error": "Invalid status"}, status=400)
 
     task.status = new_status
+
+    # record timestamp when completed
+    if new_status == "completed":
+        task.completed_at = timezone.now()
+
     task.save()
 
     # Log activity
@@ -152,3 +157,50 @@ def export_requests_csv(request):
         ])
 
     return response
+
+
+# 6. Technician Analytics (Admin only)
+@api_view(['GET'])
+@permission_classes([IsAdmin])
+def technician_analytics(request):
+    technicians = User.objects.filter(role="technician")
+    report = []
+
+    for tech in technicians:
+        tasks = MaintenanceRequest.objects.filter(assigned_to=tech)
+
+        total_assigned = tasks.count()
+        completed = tasks.filter(status="completed").count()
+        in_progress = tasks.filter(status="in_progress").count()
+        pending = tasks.filter(status="pending").count()
+
+        # completion rate
+        completion_rate = (completed / total_assigned * 100) if total_assigned > 0 else 0
+
+        # average completion time
+        completed_tasks = tasks.filter(status="completed", completed_at__isnull=False)
+        total_time = timedelta()
+
+        for t in completed_tasks:
+            total_time += (t.completed_at - t.created_at)
+
+        if completed_tasks.count() > 0:
+            avg_time = total_time / completed_tasks.count()
+            avg_hours = round(avg_time.total_seconds() / 3600, 2)
+        else:
+            avg_hours = None
+
+        # Build technician report
+        report.append({
+            "technician_id": tech.id,
+            "technician_name": tech.username,
+            "email": tech.email,
+            "total_assigned": total_assigned,
+            "completed": completed,
+            "pending": pending,
+            "in_progress": in_progress,
+            "completion_rate": round(completion_rate, 1),
+            "average_completion_time_hours": avg_hours,
+        })
+
+    return Response(report)
