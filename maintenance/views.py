@@ -5,6 +5,8 @@ from django.utils import timezone
 from rest_framework import generics, permissions, filters
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
+from django.db.models import Count, Q
+from django.db.models.functions import TruncMonth
 from .models import MaintenanceRequest
 from .serializers import MaintenanceRequestSerializer
 from django.contrib.auth import get_user_model
@@ -159,48 +161,131 @@ def export_requests_csv(request):
     return response
 
 
-# 6. Technician Analytics (Admin only)
-@api_view(['GET'])
-@permission_classes([IsAdmin])
-def technician_analytics(request):
-    technicians = User.objects.filter(role="technician")
-    report = []
+def generate_technician_stats():
+    technicians = User.objects.filter(role="technician").annotate(
+        total_assigned=Count("assigned_tasks", distinct=True),
+        completed=Count(
+            "assigned_tasks",
+            filter=Q(assigned_tasks__status="completed"),
+            distinct=True,
+        ),
+        in_progress=Count(
+            "assigned_tasks",
+            filter=Q(assigned_tasks__status="in_progress"),
+            distinct=True,
+        ),
+        pending=Count(
+            "assigned_tasks",
+            filter=Q(assigned_tasks__status="pending"),
+            distinct=True,
+        ),
+    )
+
+    results = []
 
     for tech in technicians:
-        tasks = MaintenanceRequest.objects.filter(assigned_to=tech)
+        completed_tasks = MaintenanceRequest.objects.filter(
+            assigned_to=tech,
+            status="completed",
+            completed_at__isnull=False,
+        ).only("created_at", "completed_at")
 
-        total_assigned = tasks.count()
-        completed = tasks.filter(status="completed").count()
-        in_progress = tasks.filter(status="in_progress").count()
-        pending = tasks.filter(status="pending").count()
-
-        # completion rate
-        completion_rate = (completed / total_assigned * 100) if total_assigned > 0 else 0
-
-        # average completion time
-        completed_tasks = tasks.filter(status="completed", completed_at__isnull=False)
         total_time = timedelta()
+        completed_tasks_count = completed_tasks.count()
 
-        for t in completed_tasks:
-            total_time += (t.completed_at - t.created_at)
+        for task in completed_tasks:
+            total_time += (task.completed_at - task.created_at)
 
-        if completed_tasks.count() > 0:
-            avg_time = total_time / completed_tasks.count()
-            avg_hours = round(avg_time.total_seconds() / 3600, 2)
-        else:
-            avg_hours = None
+        completion_rate = (
+            (tech.completed / tech.total_assigned) * 100
+            if tech.total_assigned > 0
+            else 0
+        )
 
-        # Build technician report
-        report.append({
+        avg_hours = (
+            round(total_time.total_seconds() / 3600 / completed_tasks_count, 2)
+            if completed_tasks_count > 0
+            else None
+        )
+
+        results.append({
             "technician_id": tech.id,
             "technician_name": tech.username,
             "email": tech.email,
-            "total_assigned": total_assigned,
-            "completed": completed,
-            "pending": pending,
-            "in_progress": in_progress,
+            "total_assigned": tech.total_assigned,
+            "completed": tech.completed,
+            "pending": tech.pending,
+            "in_progress": tech.in_progress,
             "completion_rate": round(completion_rate, 1),
             "average_completion_time_hours": avg_hours,
         })
 
-    return Response(report)
+    # Ranking algorithm
+    results.sort(
+        key=lambda x: (
+            -x["completion_rate"],
+            x["average_completion_time_hours"] or 9999,
+            -x["completed"],
+        )
+    )
+
+    return results
+
+
+# 6. Technician Analytics (Admin only)
+@api_view(['GET'])
+@permission_classes([IsAdmin])
+def technician_analytics(request):
+    return Response(generate_technician_stats())
+
+
+# 7. Monthly Maintenance Request Analytics (Admin only)
+@api_view(['GET'])
+@permission_classes([IsAdmin])
+def monthly_analytics(request):
+    monthly_data = (
+        MaintenanceRequest.objects
+        .annotate(month=TruncMonth("created_at"))
+        .values("month")
+        .annotate(total=Count("id"))
+        .order_by("month")
+    )
+
+    formatted = [
+        {
+            "month": item["month"].strftime("%Y-%m"),
+            "total_requests": item["total"]
+        }
+        for item in monthly_data
+    ]
+
+    return Response(formatted)
+
+
+# 8. Dashboard Chart Data (Admin only)
+@api_view(['GET'])
+@permission_classes([IsAdmin])
+def chart_data(request):
+    data = {}
+
+    data["status_counts"] = {
+        "pending": MaintenanceRequest.objects.filter(status="pending").count(),
+        "in_progress": MaintenanceRequest.objects.filter(status="in_progress").count(),
+        "completed": MaintenanceRequest.objects.filter(status="completed").count(),
+    }
+
+    asset_counts = {}
+    for req in MaintenanceRequest.objects.filter(asset__isnull=False):
+        asset_name = req.asset.name
+        asset_counts[asset_name] = asset_counts.get(asset_name, 0) + 1
+
+    data["requests_per_asset"] = asset_counts
+
+    tech_load = {}
+    for req in MaintenanceRequest.objects.filter(assigned_to__isnull=False):
+        name = req.assigned_to.username
+        tech_load[name] = tech_load.get(name, 0) + 1
+
+    data["technician_load"] = tech_load
+
+    return Response(data)

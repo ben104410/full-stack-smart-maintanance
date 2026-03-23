@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CreateRequestView, ListRequestsView, assign_technician, update_status, export_requests_csv, technician_analytics
+from .views import CreateRequestView, ListRequestsView, assign_technician, update_status, export_requests_csv, technician_analytics, monthly_analytics, chart_data
 
 urlpatterns = [
     path('create/', CreateRequestView.as_view()),
@@ -9,4 +9,6 @@ urlpatterns = [
     path('export/csv/', export_requests_csv),
     path('export/pdf/', export_requests_pdf),
     path('analytics/technicians/', technician_analytics),
+    path('analytics/monthly/', monthly_analytics),
+    path('analytics/charts/', chart_data),
 ]
