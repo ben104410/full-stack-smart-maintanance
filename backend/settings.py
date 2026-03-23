@@ -138,9 +138,9 @@ CORS_ALLOWED_ORIGINS = [
 
 # Cloudinary storage (use env vars for credentials)
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME', ''),
-    'API_KEY': os.getenv('CLOUDINARY_API_KEY', ''),
-    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET', ''),
+    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME', 'daz1lv1pp'),
+    'API_KEY': os.getenv('CLOUDINARY_API_KEY', '138895594734722'),
+    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET', 'LYeSKdR2Iqk8WX8w-rM8lgV5VoE'),
 }
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
@@ -151,12 +151,11 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend', 'rest_framework.filters.SearchFilter']
 }
-}
 
 # Email configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'yourgmail@gmail.com'
-EMAIL_HOST_PASSWORD = 'your_app_password'
+EMAIL_HOST_USER = 'titusben64@gmail.com'
+EMAIL_HOST_PASSWORD = '@mutisoh10'
