@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from assets.models import Asset
+from django.utils import timezone
 class MaintenanceRequest(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Pending'),
