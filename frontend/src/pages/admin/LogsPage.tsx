@@ -2,8 +2,16 @@ import { useState, useEffect } from "react";
 import api from "../../api/axios";
 import AdminLayout from "../../layouts/AdminLayout";
 
+interface Log {
+  id: string;
+  user?: { username: string };
+  action: string;
+  details: string;
+  timestamp: string;
+}
+
 export default function LogsPage() {
-  const [logs, setLogs] = useState([]);
+  const [logs, setLogs] = useState<Log[]>([]);
   const [search, setSearch] = useState("");
   const [actionFilter, setActionFilter] = useState("All");
   const [dateFilter, setDateFilter] = useState("");

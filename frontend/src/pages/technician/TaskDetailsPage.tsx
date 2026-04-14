@@ -5,8 +5,8 @@ import TechnicianLayout from "../../layouts/TechnicianLayout";
 
 export default function TaskDetailsPage() {
   const { id } = useParams();
-  const [task, setTask] = useState(null);
-  const [logs, setLogs] = useState([]);
+  const [task, setTask] = useState<any>(null);
+  const [logs, setLogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchTask = async () => {
@@ -16,7 +16,7 @@ export default function TaskDetailsPage() {
 
       const logRes = await api.get("activity/");
       const taskLogs = logRes.data.filter(
-        (log) => log.details?.includes(res.data.title)
+        (log: any) => log.details?.includes(res.data.title)
       );
       setLogs(taskLogs);
 
@@ -30,7 +30,7 @@ export default function TaskDetailsPage() {
     fetchTask();
   }, []);
 
-  if (loading) {
+  if (loading || !task) {
     return (
       <TechnicianLayout>
         <p>Loading...</p>

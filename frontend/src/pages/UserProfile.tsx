@@ -1,18 +1,18 @@
-import { useEffect, useState } from "react";
-import axios from "../utils/axios";
+import { FormEvent, useEffect, useState } from "react";
+import api from "../api/axios";
 import toast from "react-hot-toast";
 
 export default function UserProfile() {
   const [loading, setLoading] = useState(true);
-  const [profile, setProfile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [profile, setProfile] = useState<any>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload`;
   const UPLOAD_PRESET = "YOUR_UPLOAD_PRESET";
 
   // Fetch profile on page load
   useEffect(() => {
-    axios
+    api
       .get("/users/profile/")
       .then((res) => {
         setProfile(res.data);
@@ -22,12 +22,12 @@ export default function UserProfile() {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleUpdate = async (e) => {
+  const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      await axios.put("/users/profile/", profile);
+      await api.put("/users/profile/", profile);
       toast.success("Profile updated successfully");
     } catch (err) {
       toast.error("Failed to update profile");

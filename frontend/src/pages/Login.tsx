@@ -1,4 +1,4 @@
-import { useState, useContext, type FormEvent } from "react"
+import { useState, useContext } from "react"
 import { useNavigate } from "react-router-dom"
 import { AuthContext } from "../context/AuthContext"
 
@@ -16,7 +16,7 @@ export default function Login() {
     password: "",
   })
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
     try {

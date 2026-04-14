@@ -3,10 +3,48 @@ import { useParams } from "react-router-dom";
 import api from "../../api/axios";
 import AdminLayout from "../../layouts/AdminLayout";
 
+interface RequestData {
+  id: string;
+  title: string;
+  description: string;
+  status: string;
+  priority: string;
+  created_at: string;
+  user: {
+    username: string;
+    email: string;
+    role: string;
+  };
+  asset?: {
+    name: string;
+    category: string;
+    location: string;
+    condition: string;
+    image?: string;
+    qr_code?: string;
+  };
+  technician?: {
+    username: string;
+    email: string;
+  };
+  before_image?: string;
+  after_image?: string;
+}
+
+interface ActivityLog {
+  id: string;
+  user?: {
+    username: string;
+  };
+  action: string;
+  details: string;
+  timestamp: string;
+}
+
 export default function RequestDetailsPage() {
   const { id } = useParams();
-  const [requestData, setRequestData] = useState(null);
-  const [logs, setLogs] = useState([]);
+  const [requestData, setRequestData] = useState<RequestData | null>(null);
+  const [logs, setLogs] = useState<ActivityLog[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {
@@ -31,6 +69,7 @@ export default function RequestDetailsPage() {
   }, []);
 
   if (loading) return <AdminLayout><p>Loading...</p></AdminLayout>;
+  if (!requestData) return <AdminLayout><p>Request not found.</p></AdminLayout>;
 
   return (
     <AdminLayout>

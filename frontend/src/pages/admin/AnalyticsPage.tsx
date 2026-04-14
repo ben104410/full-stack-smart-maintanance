@@ -10,9 +10,9 @@ import {
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Tooltip, Legend);
 
 export default function AnalyticsPage() {
-  const [stats, setStats] = useState(null);
-  const [byMonth, setByMonth] = useState([]);
-  const [byTechnician, setByTechnician] = useState([]);
+  const [stats, setStats] = useState<any>(null);
+  const [byMonth, setByMonth] = useState<any[]>([]);
+  const [byTechnician, setByTechnician] = useState<any[]>([]);
 
   const fetchStats = async () => {
     try {

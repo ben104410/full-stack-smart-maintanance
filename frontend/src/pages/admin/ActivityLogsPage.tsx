@@ -2,10 +2,18 @@ import { useState, useEffect } from "react";
 import api from "../../api/axios";
 import AdminLayout from "../../layouts/AdminLayout";
 
+interface ActivityLog {
+  id: number;
+  user?: { username: string };
+  action: string;
+  details?: string;
+  timestamp: string;
+}
+
 export default function ActivityLogsPage() {
-  const [logs, setLogs] = useState([]);
+  const [logs, setLogs] = useState<ActivityLog[]>([]);
   const [search, setSearch] = useState("");
-  the [actionFilter, setActionFilter] = useState("All");
+  const [actionFilter, setActionFilter] = useState("All");
   const [dateFilter, setDateFilter] = useState("");
 
   const fetchLogs = () => {
@@ -126,7 +134,7 @@ export default function ActivityLogsPage() {
 
             {filteredLogs.length === 0 && (
               <tr>
-                <td className="p-4 text-center" colSpan="4">
+                <td className="p-4 text-center" colSpan={4}>
                   No logs found.
                 </td>
               </tr>

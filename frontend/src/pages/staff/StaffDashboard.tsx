@@ -3,8 +3,17 @@ import api from "../../api/axios";
 import StaffLayout from "../../layouts/StaffLayout";
 import NewRequestModal from "../../components/NewRequestModal";
 
+interface MaintenanceRequest {
+  id: number;
+  title: string;
+  priority: string;
+  status: string;
+  asset?: { name: string };
+  created_at: string;
+}
+
 export default function StaffDashboard() {
-  const [requests, setRequests] = useState([]);
+  const [requests, setRequests] = useState<MaintenanceRequest[]>([]);
   const [openModal, setOpenModal] = useState(false);
 
   const fetchRequests = () => {

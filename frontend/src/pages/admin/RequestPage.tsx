@@ -3,11 +3,22 @@ import api from "../../api/axios";
 import AdminLayout from "../../layouts/AdminLayout";
 import AssignTechnicianModal from "../../components/AssignTechnicianModal";
 
+interface Request {
+  id: number;
+  title: string;
+  description: string;
+  status: string;
+  priority: string;
+  created_at: string;
+  user?: { username: string };
+  asset?: { name: string };
+}
+
 export default function RequestsPage() {
-  const [requests, setRequests] = useState([]);
+  const [requests, setRequests] = useState<Request[]>([]);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
-  const [assignData, setAssignData] = useState(null);
+  const [assignData, setAssignData] = useState<Request | null>(null);
 
   const fetchRequests = () => {
     api.get("maintenance/all/")
