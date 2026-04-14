@@ -3,7 +3,9 @@ import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
 export default function LandingPage() {
-  const { user, loading } = useContext(AuthContext);
+  const auth = useContext(AuthContext);
+  const user = auth?.user ?? null;
+  const loading = auth?.loading ?? true;
 
   // Automatically redirect logged-in users to their dashboard
   if (!loading && user) {

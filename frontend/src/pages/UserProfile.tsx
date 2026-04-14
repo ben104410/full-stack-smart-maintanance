@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from "react";
+import { type ChangeEvent, type FormEvent, useEffect, useState } from "react";
 import api from "../api/axios";
 import toast from "react-hot-toast";
 
@@ -22,7 +22,7 @@ export default function UserProfile() {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleUpdate = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
@@ -36,8 +36,9 @@ export default function UserProfile() {
     setLoading(false);
   };
 
-  const handleImageUpload = async (event) => {
-    const file = event.target.files[0];
+  const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
     setImagePreview(URL.createObjectURL(file));
 
     const formData = new FormData();

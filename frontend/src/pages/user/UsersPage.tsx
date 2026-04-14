@@ -2,8 +2,15 @@ import { useEffect, useState } from "react";
 import api from "../../api/axios";
 import AdminLayout from "../../layouts/AdminLayout";
 
+interface User {
+  id: number;
+  username: string;
+  email: string;
+  role: string;
+}
+
 export default function UsersPage() {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
     api.get("users/all/")

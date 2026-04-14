@@ -1,4 +1,4 @@
-import { useState, useContext } from "react"
+import { type ChangeEvent, type FormEvent, useState, useContext } from "react"
 import { useNavigate } from "react-router-dom"
 import { AuthContext } from "../context/AuthContext"
 
@@ -16,7 +16,7 @@ export default function Login() {
     password: "",
   })
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     try {
@@ -40,7 +40,7 @@ export default function Login() {
           placeholder="Email"
           value={form.email}
           className="w-full mb-3 p-2 border"
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setForm({ ...form, email: e.target.value })}
         />
 
         <input
@@ -48,7 +48,7 @@ export default function Login() {
           placeholder="Password"
           value={form.password}
           className="w-full mb-3 p-2 border"
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setForm({ ...form, password: e.target.value })}
         />
 
         <button className="w-full bg-blue-600 text-white p-2 rounded" type="submit">

@@ -42,7 +42,7 @@ interface ActivityLog {
 }
 
 export default function RequestDetailsPage() {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const [requestData, setRequestData] = useState<RequestData | null>(null);
   const [logs, setLogs] = useState<ActivityLog[]>([]);
   const [loading, setLoading] = useState(true);
@@ -54,7 +54,7 @@ export default function RequestDetailsPage() {
 
       const logRes = await api.get("activity/");
       const filteredLogs = logRes.data.filter(
-        (log) => log.details?.includes(req.data.title)
+        (log: ActivityLog) => log.details?.includes(req.data.title)
       );
       setLogs(filteredLogs);
 

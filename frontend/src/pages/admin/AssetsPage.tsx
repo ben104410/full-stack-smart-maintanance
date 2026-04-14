@@ -4,11 +4,21 @@ import AdminLayout from "../../layouts/AdminLayout";
 import AddAssetModal from "../../components/AddAssetModal";
 import EditAssetModal from "../../components/EditAssetModal";
 
+interface Asset {
+  id: number;
+  name: string;
+  category: string;
+  location: string;
+  condition: string;
+  image?: string;
+  qr_code?: string;
+}
+
 export default function AssetsPage() {
-  const [assets, setAssets] = useState([]);
+  const [assets, setAssets] = useState<Asset[]>([]);
   const [search, setSearch] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
-  const [editAsset, setEditAsset] = useState(null);
+  const [editAsset, setEditAsset] = useState<Asset | null>(null);
 
   const fetchAssets = () => {
     api.get("assets/all/")
@@ -20,7 +30,7 @@ export default function AssetsPage() {
     fetchAssets();
   }, []);
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: number) => {
     if (!confirm("Delete this asset?")) return;
 
     try {
