@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import LandingPage from './pages/LandingPage'
 import ProtectedRoute from './components/ProtectedRoute'
 import Login from './pages/Login'
+import Register from './pages/Register'
 import UserProfile from './pages/UserProfile'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import TechnicianDashboard from './pages/technician/TechnicianDashboard'
@@ -19,8 +20,9 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={<ProtectedRoute><LandingPage /></ProtectedRoute>} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
         {/* Authenticated Routes */}
         <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
