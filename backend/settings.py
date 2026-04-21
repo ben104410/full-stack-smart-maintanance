@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-$k+$jrubx1c4k&%(!pq=sr+%=p4a1(0pao$4#l0ax8il82+wa(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 
 # Application definition
@@ -134,6 +134,7 @@ STATIC_URL = 'static/'
 # CORS settings (adjust for production)
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    "http://127.0.0.1:5173",
 ]
 
 # Cloudinary storage (use env vars for credentials)

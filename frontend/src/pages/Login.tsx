@@ -1,6 +1,7 @@
-import { type ChangeEvent, type FormEvent, useState, useContext } from "react"
+import { type ChangeEvent, type FormEvent, useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom"
 import { AuthContext } from "../context/AuthContext"
+import toast from "react-hot-toast"
 
 export default function Login() {
   const auth = useContext(AuthContext)
@@ -15,57 +16,83 @@ export default function Login() {
     email: "",
     password: "",
   })
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setIsSubmitting(true);
 
     try {
       await login(form.email, form.password)
-      navigate("/")
-    } catch (err) {
-      alert("Login failed")
+      toast.success("Welcome to the Pwani University Portal");
+      navigate("/", { replace: true });
+    } catch (err: any) {
+      const errorData = err.response?.data;
+      const firstError =
+        errorData?.detail ||
+        errorData?.email?.[0] ||
+        errorData?.password?.[0] ||
+        errorData?.non_field_errors?.[0] ||
+        "Authentication failed. Please verify your credentials.";
+
+      toast.error(firstError);
+    } finally {
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-blue-950 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#002147] px-4 relative overflow-hidden">
+      {/* Background Decorative Elements */}
+      <div className="absolute top-0 left-0 w-full h-2 bg-[#f37021]"></div>
+      <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#f37021] rounded-full blur-[120px] opacity-10"></div>
+      
       <div className="max-w-md w-full">
         <div className="text-center mb-10">
-          <div className="w-16 h-16 bg-orange-600 rounded-2xl mx-auto flex items-center justify-center text-white text-3xl font-bold shadow-lg mb-4">P</div>
-          <h1 className="text-3xl font-extrabold text-white">Institutional Login</h1>
-          <p className="text-blue-300 mt-2 font-medium">Maintenance & Asset Management Portal</p>
+          <div className="w-20 h-20 bg-[#f37021] rounded-3xl mx-auto flex items-center justify-center text-white text-4xl font-black shadow-2xl mb-6 border-4 border-white/20">P</div>
+          <h1 className="text-4xl font-black text-white tracking-tight italic">Portal <span className="text-[#f37021] not-italic">Login</span></h1>
+          <p className="text-blue-200 mt-3 font-medium text-lg opacity-80 uppercase tracking-widest">Institutional Access</p>
         </div>
 
-        <form className="bg-white p-10 shadow-2xl rounded-3xl" onSubmit={handleSubmit}>
-          <div className="mb-6">
-            <label className="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Email Address</label>
+        <form className="bg-white p-12 shadow-[0_20px_50px_rgba(0,0,0,0.3)] rounded-[2.5rem] border border-white/10" onSubmit={handleSubmit}>
+          <div className="mb-8">
+            <label className="block text-xs font-black text-slate-500 mb-2 uppercase tracking-[0.2em]">University Email</label>
             <input
               type="email"
               placeholder="user@university.edu"
               value={form.email}
-              className="w-full p-4 border border-slate-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition"
+              className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:ring-4 focus:ring-orange-100 focus:border-[#f37021] outline-none transition-all font-medium"
               onChange={(e: ChangeEvent<HTMLInputElement>) => setForm({ ...form, email: e.target.value })}
+              required
             />
           </div>
 
-          <div className="mb-8">
-            <label className="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Password</label>
+          <div className="mb-10">
+            <div className="flex justify-between items-center mb-2">
+              <label className="text-xs font-black text-slate-500 uppercase tracking-[0.2em]">Security Password</label>
+              <a href="#" className="text-[10px] font-bold text-[#002147] hover:text-[#f37021] uppercase tracking-tighter">Forgot?</a>
+            </div>
             <input
               type="password"
               placeholder="••••••••"
               value={form.password}
-              className="w-full p-4 border border-slate-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition"
+              className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:ring-4 focus:ring-orange-100 focus:border-[#f37021] outline-none transition-all font-medium"
               onChange={(e: ChangeEvent<HTMLInputElement>) => setForm({ ...form, password: e.target.value })}
+              required
             />
           </div>
 
-          <button className="w-full bg-orange-600 text-white p-4 rounded-xl font-bold text-lg hover:bg-orange-700 shadow-lg transition-all active:scale-[0.98]" type="submit">
-            Sign In
+          <button 
+            disabled={isSubmitting}
+            className="w-full bg-[#f37021] text-white p-5 rounded-2xl font-black text-lg hover:bg-[#d65a10] shadow-[0_10px_20px_rgba(243,112,33,0.3)] transition-all active:scale-[0.97] disabled:opacity-70" 
+            type="submit"
+          >
+            {isSubmitting ? "Authenticating..." : "Access Account"}
           </button>
 
           <div className="mt-6 text-center">
-            <p className="text-slate-500 text-sm">
-              Don't have an account? <Link to="/register" className="text-blue-700 font-bold hover:underline">Sign Up</Link>
+            <p className="text-slate-400 text-sm font-semibold">
+              New to the portal? <Link to="/register" className="text-[#002147] font-black hover:text-[#f37021] transition">Request Access</Link>
             </p>
           </div>
         </form>

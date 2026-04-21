@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.decorators import api_view, permission_classes
 from .models import User
-from .serializers import UserSerializer, RegisterSerializer
+from .serializers import UserSerializer, RegisterSerializer, EmailTokenObtainPairSerializer
 import uuid
 from utils.email_service import send_notification
 from django.contrib.auth.hashers import make_password
@@ -16,7 +16,7 @@ class RegisterView(generics.CreateAPIView):
 
 
 class LoginView(TokenObtainPairView):
-    pass
+    serializer_class = EmailTokenObtainPairSerializer
 
 
 class UserProfileView(generics.RetrieveUpdateAPIView):

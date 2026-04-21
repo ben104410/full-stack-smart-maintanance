@@ -18,21 +18,24 @@ export default function TechnicianLayout({ children }: Props) {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-slate-50">
       {/* Sidebar */}
-      <aside className="w-72 bg-slate-900 text-white flex flex-col shadow-2xl">
-        <div className="p-8 border-b border-slate-800">
+      <aside className="w-80 bg-[#002147] text-white flex flex-col shadow-xl border-r-4 border-[#f37021]">
+        <div className="p-10 border-b border-white/10">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold">T</div>
-            <span className="text-xl font-bold tracking-tight">Tech Desk</span>
+            <div className="w-10 h-10 bg-[#f37021] rounded-lg flex items-center justify-center font-bold text-xl">T</div>
+            <span className="text-2xl font-bold tracking-tight uppercase">Tech<span className="text-[#f37021]">Desk</span></span>
           </div>
         </div>
-        <nav className="flex-1 p-6 space-y-3">
-          <Link to="/technician/dashboard" className="flex items-center gap-3 p-3.5 rounded-xl hover:bg-slate-800 transition font-semibold text-slate-300 hover:text-white">
-            Dashboard
+        <nav className="flex-1 p-8 space-y-4">
+          <Link to="/technician/dashboard" className="flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all font-black text-xs uppercase tracking-widest text-blue-100 hover:text-white border border-transparent hover:border-white/10">
+            <span className="opacity-50">01</span> Dashboard
           </Link>
-          <Link to="/profile" className="flex items-center gap-3 p-3.5 rounded-xl hover:bg-slate-800 transition font-semibold text-slate-300 hover:text-white">
-            My Profile
+          <Link to="/profile" className="flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all font-black text-xs uppercase tracking-widest text-blue-100 hover:text-white border border-transparent hover:border-white/10">
+            <span className="opacity-50">02</span> My Profile
+          </Link>
+          <Link to="/" className="flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-all font-black text-xs uppercase tracking-widest text-orange-400 border border-transparent hover:border-orange-500/20">
+            <span className="opacity-50">03</span> Return to Hub
           </Link>
         </nav>
         <div className="p-6 border-t border-slate-800 bg-slate-950/50">

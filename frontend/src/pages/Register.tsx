@@ -1,9 +1,11 @@
-import { useState, type FormEvent, type ChangeEvent } from "react";
+import { useState, type FormEvent, type ChangeEvent, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../api/axios";
 import toast from "react-hot-toast";
+import { AuthContext } from "../context/AuthContext";
 
 export default function Register() {
+  const auth = useContext(AuthContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
@@ -13,16 +15,29 @@ export default function Register() {
     role: "staff", // Default role
   });
 
+  if (!auth) {
+    throw new Error("AuthContext must be used within AuthProvider");
+  }
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
       await api.post("/users/register/", form);
-      toast.success("Account created! Please log in.");
-      navigate("/login");
-    } catch (err) {
-      toast.error("Registration failed. Please try again.");
+      await auth.login(form.email, form.password);
+      toast.success("Account created! Redirecting to landing page...");
+      navigate("/", { replace: true });
+    } catch (err: any) {
+      const errorData = err.response?.data;
+      const firstError =
+        errorData?.email?.[0] ||
+        errorData?.password?.[0] ||
+        errorData?.username?.[0] ||
+        errorData?.detail ||
+        "Registration failed. Please contact IT if this persists.";
+
+      toast.error(firstError);
     } finally {
       setLoading(false);
     }
@@ -33,15 +48,15 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-blue-950 px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-[#002147] px-4 py-12">
       <div className="max-w-md w-full">
         <div className="text-center mb-10">
-          <div className="w-16 h-16 bg-orange-600 rounded-2xl mx-auto flex items-center justify-center text-white text-3xl font-bold shadow-lg mb-4">P</div>
+          <div className="w-16 h-16 bg-[#f37021] rounded-2xl mx-auto flex items-center justify-center text-white text-3xl font-bold shadow-lg mb-4">P</div>
           <h1 className="text-3xl font-extrabold text-white">Create Account</h1>
           <p className="text-blue-300 mt-2 font-medium">Join the Pwani Maintenance Portal</p>
         </div>
 
-        <form className="bg-white p-10 shadow-2xl rounded-3xl" onSubmit={handleSubmit}>
+        <form className="bg-white p-10 shadow-2xl rounded-[2rem]" onSubmit={handleSubmit}>
           <div className="space-y-5">
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-widest">Full Name</label>
@@ -55,7 +70,7 @@ export default function Register() {
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-widest">University Email</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-widest"> Email</label>
               <input
                 type="email"
                 name="email"
@@ -80,7 +95,7 @@ export default function Register() {
 
           <button 
             disabled={loading}
-            className="w-full bg-orange-600 text-white p-4 rounded-xl font-bold text-lg hover:bg-orange-700 shadow-lg mt-8 transition-all disabled:opacity-50" 
+            className="w-full bg-[#f37021] text-white p-4 rounded-xl font-bold text-lg hover:bg-orange-600 shadow-lg mt-8 transition-all disabled:opacity-50" 
             type="submit"
           >
             {loading ? "Creating..." : "Register Account"}
@@ -88,7 +103,7 @@ export default function Register() {
 
           <div className="mt-6 text-center">
             <p className="text-slate-500 text-sm">
-              Already have an account? <Link to="/login" className="text-blue-700 font-bold hover:underline">Sign In</Link>
+              Already have an account? <Link to="/login" className="text-[#002147] font-bold hover:underline">Sign In</Link>
             </p>
           </div>
         </form>
