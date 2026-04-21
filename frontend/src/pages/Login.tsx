@@ -18,6 +18,10 @@ export default function Login() {
   })
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true);
@@ -35,6 +39,7 @@ export default function Login() {
         errorData?.non_field_errors?.[0] ||
         "Authentication failed. Please verify your credentials.";
 
+      console.error("Login failed:", err); // Add this line for debugging
       toast.error(firstError);
     } finally {
       setIsSubmitting(false);
@@ -59,25 +64,33 @@ export default function Login() {
             <label className="block text-xs font-black text-slate-500 mb-2 uppercase tracking-[0.2em]">University Email</label>
             <input
               type="email"
+              name="email"
               placeholder="user@university.edu"
               value={form.email}
               className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:ring-4 focus:ring-orange-100 focus:border-[#f37021] outline-none transition-all font-medium"
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setForm({ ...form, email: e.target.value })}
+              onChange={handleChange}
               required
             />
           </div>
 
           <div className="mb-10">
             <div className="flex justify-between items-center mb-2">
-              <label className="text-xs font-black text-slate-500 uppercase tracking-[0.2em]">Security Password</label>
-              <a href="#" className="text-[10px] font-bold text-[#002147] hover:text-[#f37021] uppercase tracking-tighter">Forgot?</a>
+              <label className="block text-xs font-black text-slate-500 mb-2 uppercase tracking-[0.2em]">Security Password</label>
+              <button 
+                type="button"
+                onClick={() => toast.error("Please contact IT support to reset your password.")}
+                className="text-[10px] font-bold text-[#002147] hover:text-[#f37021] uppercase tracking-tighter"
+              >
+                Forgot?
+              </button>
             </div>
             <input
               type="password"
+              name="password"
               placeholder="••••••••"
               value={form.password}
               className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:ring-4 focus:ring-orange-100 focus:border-[#f37021] outline-none transition-all font-medium"
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setForm({ ...form, password: e.target.value })}
+              onChange={handleChange}
               required
             />
           </div>

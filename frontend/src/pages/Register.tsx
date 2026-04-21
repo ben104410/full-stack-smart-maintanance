@@ -36,6 +36,7 @@ export default function Register() {
         errorData?.username?.[0] ||
         errorData?.detail ||
         "Registration failed. Please contact IT if this persists.";
+      console.error("Registration failed:", err); // Add this line for debugging
 
       toast.error(firstError);
     } finally {
@@ -59,11 +60,11 @@ export default function Register() {
         <form className="bg-white p-10 shadow-2xl rounded-[2rem]" onSubmit={handleSubmit}>
           <div className="space-y-5">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-widest">Full Name</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-widest">Username</label>
               <input
                 type="text"
                 name="username"
-                placeholder="John Doe"
+                placeholder="johndoe_99"
                 required
                 className="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-blue-500 transition"
                 onChange={handleChange}
@@ -91,6 +92,19 @@ export default function Register() {
                 onChange={handleChange}
               />
             </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-widest">Institutional Role</label>
+              <select
+                name="role"
+                value={form.role}
+                className="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-blue-500 bg-white transition"
+                onChange={handleChange}
+              >
+                <option value="staff">Staff Member</option>
+                <option value="technician">Technician</option>
+                <option value="admin">Administrator</option>
+              </select>
+            </div>
           </div>
 
           <button 
@@ -103,7 +117,7 @@ export default function Register() {
 
           <div className="mt-6 text-center">
             <p className="text-slate-500 text-sm">
-              Already have an account? <Link to="/login" className="text-[#002147] font-bold hover:underline">Sign In</Link>
+              Already have an account? <Link to="/login" className="text-[#f37021] font-bold hover:text-[#002147] transition">Sign In</Link>
             </p>
           </div>
         </form>
