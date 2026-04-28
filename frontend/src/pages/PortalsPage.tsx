@@ -45,19 +45,19 @@ export default function PortalsPage() {
   ].filter((mod) => !mod.role || user?.role === mod.role || user?.role === "admin");
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-900">
+    <div className="min-h-screen bg-[#f8fafc] font-sans antialiased text-slate-900">
       <header className="sticky top-0 z-50 border-b-4 border-[#f37021] bg-[#002147] shadow-2xl">
         <div className="mx-auto flex h-24 max-w-[1440px] items-center justify-between px-8">
           <Link to="/" className="flex items-center gap-2">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#f37021] text-2xl font-black text-white shadow-inner">
               P
             </div>
-            <span className="text-2xl font-black uppercase italic tracking-tighter text-white">
+            <span className="text-2xl font-extrabold uppercase italic tracking-tighter text-white">
               Pwani <span className="text-[#f37021]">Maint</span>
             </span>
           </Link>
 
-          <nav className="hidden items-center gap-8 text-xs font-black uppercase tracking-widest text-blue-100 md:flex">
+          <nav className="hidden items-center gap-8 text-xs font-bold uppercase tracking-widest text-blue-100 md:flex">
             <Link to="/" className="transition-colors hover:text-orange-400">
               Home
             </Link>
@@ -95,10 +95,10 @@ export default function PortalsPage() {
 
       <section className="bg-[#002147] px-6 py-24 text-white">
         <div className="mx-auto max-w-6xl text-center">
-          <span className="text-xs font-black uppercase tracking-[0.3em] text-orange-400">
+          <span className="text-xs font-bold uppercase tracking-[0.3em] text-orange-400">
             Service Access
           </span>
-          <h1 className="mt-4 text-5xl font-black tracking-tight md:text-6xl">
+          <h1 className="mt-4 text-5xl font-extrabold tracking-tight md:text-6xl">
             Integrated Service Portals
           </h1>
           <p className="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-blue-100/80">

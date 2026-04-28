@@ -20,15 +20,15 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#fcfdfe] font-sans text-slate-900 selection:bg-orange-100">
+    <div className="min-h-screen bg-[#fcfdfe] font-sans antialiased text-slate-900 selection:bg-orange-100">
       <header className="sticky top-0 z-50 border-b-4 border-[#f37021] bg-[#002147] shadow-2xl">
         <div className="mx-auto flex h-24 max-w-[1440px] items-center justify-between px-8">
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#f37021] text-2xl font-black text-white shadow-inner">
+            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-[#f37021] text-3xl font-black text-white shadow-inner">
               P
             </div>
             <div className="flex flex-col">
-              <span className="text-2xl font-black uppercase italic leading-none tracking-tighter text-white group-hover:text-orange-100 transition-colors">
+              <span className="text-2xl font-extrabold uppercase italic leading-none tracking-tighter text-white group-hover:text-orange-100 transition-colors">
                 Pwani <span className="text-[#f37021]">Maint</span>
               </span>
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-300">
@@ -37,7 +37,7 @@ export default function LandingPage() {
             </div>
           </Link>
 
-          <nav className="hidden items-center gap-8 text-xs font-black uppercase tracking-widest text-blue-100 md:flex">
+          <nav className="hidden items-center gap-8 text-xs font-bold uppercase tracking-widest text-blue-100 md:flex">
             <Link to="/core-capabilities" className="transition-colors hover:text-orange-400">
               Core Capabilities
             </Link>
@@ -100,7 +100,7 @@ export default function LandingPage() {
                 Smart Facilities Operations
               </span>
 
-              <h1 className="mb-8 text-5xl font-black leading-[0.95] tracking-tighter md:text-7xl">
+              <h1 className="mb-8 text-5xl font-extrabold leading-[0.95] tracking-tight md:text-7xl">
                 Empowering Institutional <span className="text-[#f37021]">Operational Excellence</span>
               </h1>
 
@@ -125,19 +125,19 @@ export default function LandingPage() {
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
-                  <div className="text-3xl font-black text-[#f37021]">24/7</div>
+                  <div className="text-3xl font-extrabold text-[#f37021]">24/7</div>
                   <p className="mt-2 text-sm text-blue-100/80">
                     Always-on visibility into requests, assets, and service activity.
                   </p>
                 </div>
                 <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
-                  <div className="text-3xl font-black text-[#f37021]">3 Roles</div>
+                  <div className="text-3xl font-extrabold text-[#f37021]">3 Roles</div>
                   <p className="mt-2 text-sm text-blue-100/80">
                     Dedicated workflows for administrators, staff, and technicians.
                   </p>
                 </div>
                 <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
-                  <div className="text-3xl font-black text-[#f37021]">1 Hub</div>
+                  <div className="text-3xl font-extrabold text-[#f37021]">1 Hub</div>
                   <p className="mt-2 text-sm text-blue-100/80">
                     Unified platform for reporting, coordination, and analytics.
                   </p>
@@ -152,11 +152,11 @@ export default function LandingPage() {
                     <p className="text-sm font-bold uppercase tracking-[0.25em] text-blue-100/60">
                       System Status
                     </p>
-                    <h3 className="mt-2 text-2xl font-black">
+                    <h3 className="mt-2 text-2xl font-extrabold tracking-tight">
                       Live Performance Matrix
                     </h3>
                   </div>
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#f37021] text-2xl font-black shadow-lg">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#f37021] text-3xl font-black shadow-lg">
                     HQ
                   </div>
                 </div>
@@ -164,7 +164,7 @@ export default function LandingPage() {
                 <div className="space-y-4">
                   <div className="rounded-2xl bg-white p-5 text-slate-900 shadow-lg">
                     <div className="mb-3 flex items-center justify-between">
-                      <p className="font-black">Asset Compliance</p>
+                      <p className="font-bold">Asset Compliance</p>
                       <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700">
                         Healthy
                       </span>
@@ -178,11 +178,11 @@ export default function LandingPage() {
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="rounded-2xl border border-white/10 bg-[#0b2d5a] p-5">
                       <p className="mb-2 text-sm text-blue-100/70">Open Requests</p>
-                      <p className="text-4xl font-black">128</p>
+                      <p className="text-4xl font-extrabold">128</p>
                     </div>
                     <div className="rounded-2xl border border-white/10 bg-[#0b2d5a] p-5">
                       <p className="mb-2 text-sm text-blue-100/70">Completion Rate</p>
-                      <p className="text-4xl font-black">94%</p>
+                      <p className="text-4xl font-extrabold">94%</p>
                     </div>
                   </div>
 
@@ -213,40 +213,40 @@ export default function LandingPage() {
       <section className="relative z-10 -mt-20 px-6">
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 md:grid-cols-3">
           <div className="group rounded-[2rem] bg-white p-8 shadow-xl transition-all hover:-translate-y-2 border-b-4 border-slate-200 hover:border-[#f37021]">
-            <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-900">
-              <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 text-blue-500">
+              <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
             </div>
-            <h4 className="text-xl font-black text-[#002147]">Staff Portal</h4>
+            <h4 className="text-xl font-bold text-[#002147]">Staff Portal</h4>
             <p className="mt-3 text-sm font-medium leading-relaxed text-slate-500">
               Lodge maintenance requests, track progress of institutional repairs, and manage departmental inventory.
             </p>
-            <Link to="/login" className="mt-6 inline-flex items-center text-xs font-black uppercase tracking-widest text-[#f37021] group-hover:gap-3 transition-all">
+            <Link to="/login" className="mt-6 inline-flex items-center text-xs font-bold uppercase tracking-widest text-[#f37021] group-hover:gap-3 transition-all">
               Access Portal <span className="ml-2">→</span>
             </Link>
           </div>
 
           <div className="group rounded-[2rem] bg-white p-8 shadow-xl transition-all hover:-translate-y-2 border-b-4 border-slate-200 hover:border-[#f37021]">
-            <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-50 text-[#f37021]">
-              <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" /></svg>
+            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-50 text-[#f37021]">
+              <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" /></svg>
             </div>
-            <h4 className="text-xl font-black text-[#002147]">Technician Hub</h4>
+            <h4 className="text-xl font-bold text-[#002147]">Technician Hub</h4>
             <p className="mt-3 text-sm font-medium leading-relaxed text-slate-500">
               Receive real-time job assignments, update repair statuses, and document service logs on the go.
             </p>
-            <Link to="/login" className="mt-6 inline-flex items-center text-xs font-black uppercase tracking-widest text-[#f37021] group-hover:gap-3 transition-all">
+            <Link to="/login" className="mt-6 inline-flex items-center text-xs font-bold uppercase tracking-widest text-[#f37021] group-hover:gap-3 transition-all">
               Access Portal <span className="ml-2">→</span>
             </Link>
           </div>
 
           <div className="group rounded-[2rem] bg-white p-8 shadow-xl transition-all hover:-translate-y-2 border-b-4 border-slate-200 hover:border-[#f37021]">
-            <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-900">
-              <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 text-slate-500">
+              <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
             </div>
-            <h4 className="text-xl font-black text-[#002147]">Admin Core</h4>
+            <h4 className="text-xl font-bold text-[#002147]">Admin Core</h4>
             <p className="mt-3 text-sm font-medium leading-relaxed text-slate-500">
               Global oversight of university assets, audit logging, technician coordination, and operational analytics.
             </p>
-            <Link to="/login" className="mt-6 inline-flex items-center text-xs font-black uppercase tracking-widest text-[#f37021] group-hover:gap-3 transition-all">
+            <Link to="/login" className="mt-6 inline-flex items-center text-xs font-bold uppercase tracking-widest text-[#f37021] group-hover:gap-3 transition-all">
               Access Portal <span className="ml-2">→</span>
             </Link>
           </div>
@@ -331,7 +331,7 @@ export default function LandingPage() {
           <div className="mb-10 grid gap-10 md:grid-cols-3">
             <div>
               <div className="mb-4 flex items-center gap-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f37021] text-xl font-black text-white shadow-inner">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#f37021] text-2xl font-black text-white shadow-inner">
                   P
                 </div>
                 <span className="text-xl font-black uppercase tracking-tight text-white">
