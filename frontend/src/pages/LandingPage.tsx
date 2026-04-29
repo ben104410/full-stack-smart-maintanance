@@ -13,10 +13,17 @@ export default function LandingPage() {
     navigate("/");
   };
 
-  const footerLinks = [
-    { label: "Privacy Policy", href: "/privacy", internal: true },
-    { label: "Terms of Service", href: "/terms", internal: true },
-    { label: "Contact Support", href: "mailto:support@pwani-maint.local", internal: false },
+  const platformLinks = [
+    { label: "Core Capabilities", href: "/core-capabilities" },
+    { label: "Institutional Portals", href: "/portals" },
+    { label: "System Workflows", href: "/core-capabilities" },
+    { label: "Leave Feedback", href: "/feedback" },
+  ];
+
+  const legalLinks = [
+    { label: "Privacy Policy", href: "/privacy" },
+    { label: "Terms of Service", href: "/terms" },
+    { label: "Institutional Support", href: "/contact" },
   ];
 
   return (
@@ -214,7 +221,7 @@ export default function LandingPage() {
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 md:grid-cols-3">
           <div className="group rounded-[2rem] bg-white p-8 shadow-xl transition-all hover:-translate-y-2 border-b-4 border-slate-200 hover:border-[#f37021]">
             <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 text-blue-500">
-              <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+              <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
             </div>
             <h4 className="text-xl font-bold text-[#002147]">Staff Portal</h4>
             <p className="mt-3 text-sm font-medium leading-relaxed text-slate-500">
@@ -227,26 +234,26 @@ export default function LandingPage() {
 
           <div className="group rounded-[2rem] bg-white p-8 shadow-xl transition-all hover:-translate-y-2 border-b-4 border-slate-200 hover:border-[#f37021]">
             <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-50 text-[#f37021]">
-              <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" /></svg>
+              <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" /></svg>
             </div>
             <h4 className="text-xl font-bold text-[#002147]">Technician Hub</h4>
             <p className="mt-3 text-sm font-medium leading-relaxed text-slate-500">
               Receive real-time job assignments, update repair statuses, and document service logs on the go.
             </p>
-            <Link to="/login" className="mt-6 inline-flex items-center text-xs font-bold uppercase tracking-widest text-[#f37021] group-hover:gap-3 transition-all">
+            <Link to="/portals" className="mt-6 inline-flex items-center text-xs font-bold uppercase tracking-widest text-[#f37021] group-hover:gap-3 transition-all">
               Access Portal <span className="ml-2">→</span>
             </Link>
           </div>
 
           <div className="group rounded-[2rem] bg-white p-8 shadow-xl transition-all hover:-translate-y-2 border-b-4 border-slate-200 hover:border-[#f37021]">
-            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 text-slate-500">
-              <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 text-[#002147]">
+              <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
             </div>
             <h4 className="text-xl font-bold text-[#002147]">Admin Core</h4>
             <p className="mt-3 text-sm font-medium leading-relaxed text-slate-500">
               Global oversight of university assets, audit logging, technician coordination, and operational analytics.
             </p>
-            <Link to="/login" className="mt-6 inline-flex items-center text-xs font-bold uppercase tracking-widest text-[#f37021] group-hover:gap-3 transition-all">
+            <Link to="/portals" className="mt-6 inline-flex items-center text-xs font-bold uppercase tracking-widest text-[#f37021] group-hover:gap-3 transition-all">
               Access Portal <span className="ml-2">→</span>
             </Link>
           </div>
@@ -326,80 +333,88 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <footer className="border-t border-blue-900 bg-blue-950 pt-14 pb-10 text-white">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="mb-10 grid gap-10 md:grid-cols-3">
-            <div>
-              <div className="mb-4 flex items-center gap-2">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#f37021] text-2xl font-black text-white shadow-inner">
-                  P
-                </div>
-                <span className="text-xl font-black uppercase tracking-tight text-white">
-                  Pwani <span className="text-[#f37021]">University</span>
+    <footer className="border-t-2 border-[#f37021] bg-[#001529] py-6 text-white">
+      <div className="mx-auto max-w-[1440px] px-10">
+        <div className="flex flex-col lg:flex-row justify-between gap-12 mb-8">
+          {/* Left Side Group: Branding & Platform */}
+          <div className="flex flex-col md:flex-row gap-12 lg:gap-20">
+            <div className="max-w-[240px]">
+              <div className="mb-3 flex items-center gap-2">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#f37021] text-2xl font-black text-white shadow-lg">
+                P
+              </div>
+                <div className="flex flex-col">
+                  <span className="text-sm font-black uppercase italic leading-none tracking-tight">
+                  Pwani <span className="text-[#f37021]">Maint</span>
                 </span>
+                  <span className="text-[8px] font-bold uppercase tracking-widest text-blue-400">
+                    Estate Management
+                  </span>
+                </div>
               </div>
-              <p className="max-w-sm leading-relaxed text-slate-300">
-                Kilifi Campus, P.O. Box 195-80108, Kilifi, Kenya.
-                <br />
-                Email: info@pwani.ac.ke
+              <p className="text-[10px] leading-relaxed text-slate-400">
+                Unified ecosystem for institutional asset tracking and maintenance orchestration at Pwani University.
               </p>
-              <p className="mt-4 max-w-sm leading-relaxed text-slate-400 text-xs">
-                Professional asset and maintenance management for institutional teams
-                focused on control, accountability, and service excellence.
-              </p>
-            </div>
+              </div>
 
             <div>
-              <h3 className="mb-4 text-sm font-black uppercase tracking-[0.25em] text-slate-400">
-                Quick Links
+              <h3 className="mb-3 text-[9px] font-black uppercase tracking-[0.3em] text-[#f37021]">
+                Platform
               </h3>
-              <div className="space-y-3">
-                <Link to="/core-capabilities" className="block text-slate-200 transition hover:text-orange-400">
-                  Core Capabilities
-                </Link>
-                <Link to="/portals" className="block text-slate-200 transition hover:text-orange-400">
-                  Portals
-                </Link>
-                <Link to="/core-capabilities" className="block text-slate-200 transition hover:text-orange-400">
-                  System Workflows
-                </Link>
-              </div>
-            </div>
-
-            <div>
-              <h3 className="mb-4 text-sm font-black uppercase tracking-[0.25em] text-slate-400">
-                Legal
-              </h3>
-              <div className="space-y-3">
-                {footerLinks.map((link) => 
-                  link.internal ? (
-                    <Link
-                      key={link.label}
-                      to={link.href}
-                      className="block text-slate-200 transition hover:text-orange-400"
-                    >
-                      {link.label}
-                    </Link>
-                  ) : (
-                    <a
-                      key={link.label}
-                      href={link.href}
-                      className="block text-slate-200 transition hover:text-orange-400"
-                    >
-                      {link.label}
-                    </a>
-                  )
-                )}
+              <div className="space-y-1.5">
+                {platformLinks.map((link) => (
+                  <Link
+                    key={link.label}
+                    to={link.href}
+                    className="block text-[11px] font-medium text-slate-300 transition hover:text-[#f37021]"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col gap-4 border-t border-white/10 pt-6 text-sm text-slate-400 md:flex-row md:items-center md:justify-between">
-            <p>© {new Date().getFullYear()} Pwani University Asset & Maintenance Management.</p>
-            <p>Developed for institutional excellence and professional service delivery.</p>
+          {/* Right Side Group: Institutional & Location */}
+          <div className="flex flex-col md:flex-row gap-12 lg:gap-20">
+            <div>
+              <h3 className="mb-3 text-[9px] font-black uppercase tracking-[0.3em] text-[#f37021]">
+                Institutional
+              </h3>
+              <div className="space-y-1.5">
+                {legalLinks.map((link) => (
+                  <Link
+                    key={link.label}
+                    to={link.href}
+                    className="block text-[11px] font-medium text-slate-300 transition hover:text-[#f37021]"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="mb-3 text-[9px] font-black uppercase tracking-[0.3em] text-[#f37021]">
+                Location
+              </h3>
+              <p className="text-[11px] leading-relaxed text-slate-400">
+                Estate Management Dept, Block B<br />
+                Main Campus - Kilifi, Kenya.
+              </p>
+              <p className="mt-1 text-[11px] font-bold text-blue-400">
+                support@pwani-maint.local
+              </p>
+            </div>
           </div>
         </div>
-      </footer>
+
+        <div className="flex flex-col gap-4 border-t border-white/5 pt-5 text-[9px] font-bold uppercase tracking-widest text-slate-500 md:flex-row md:items-center md:justify-between">
+          <p>© {new Date().getFullYear()} Pwani University . Institutional Excellence .</p>
+          <p>v2.4.0-Stable</p>
+        </div>
+      </div>
+    </footer>
     </div>
   );
 }

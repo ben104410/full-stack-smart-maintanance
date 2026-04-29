@@ -66,7 +66,7 @@ export default function CoreCapabilitiesPage() {
           </div>
 
           <div className="rounded-[2.5rem] bg-white p-12 shadow-sm border border-slate-100 transition-all hover:shadow-xl">
-            <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-900 text-2xl">
+            <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-[#002147] text-2xl">
               🚀
             </div>
             <h3 className="mb-5 text-2xl font-black text-[#002147]">

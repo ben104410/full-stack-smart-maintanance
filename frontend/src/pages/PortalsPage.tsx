@@ -32,14 +32,14 @@ export default function PortalsPage() {
       title: "Tech Desk",
       role: "technician",
       desc: "Assigned task execution, repair updates, and proof-of-work tracking.",
-      color: "bg-slate-800 text-white",
+      color: "bg-[#002147] text-white",
       path: "/technician/dashboard",
     },
     {
       title: "Analytics Hub",
       role: "admin",
       desc: "Performance metrics, lifecycle insights, and operational intelligence.",
-      color: "bg-blue-600 text-white",
+      color: "bg-[#002147] text-white", // Changed to primary dark blue
       path: "/admin/analytics",
     },
   ].filter((mod) => !mod.role || user?.role === mod.role || user?.role === "admin");

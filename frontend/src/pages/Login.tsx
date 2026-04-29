@@ -13,7 +13,7 @@ export default function Login() {
 
   const { login } = auth
   const [form, setForm] = useState({
-    email: "",
+    username: "",
     password: "",
   })
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -27,7 +27,7 @@ export default function Login() {
     setIsSubmitting(true);
 
     try {
-      await login(form.email, form.password)
+      await login(form.username, form.password)
       toast.success("Welcome to the Pwani University Portal");
       navigate("/", { replace: true });
     } catch (err: any) {
@@ -61,12 +61,12 @@ export default function Login() {
 
         <form className="bg-white p-12 shadow-[0_20px_50px_rgba(0,0,0,0.3)] rounded-[2.5rem] border border-white/10" onSubmit={handleSubmit}>
           <div className="mb-8">
-            <label className="block text-xs font-black text-slate-500 mb-2 uppercase tracking-[0.2em]">University Email</label>
+            <label className="block text-xs font-black text-slate-500 mb-2 uppercase tracking-[0.2em]">Username</label>
             <input
-              type="email"
-              name="email"
-              placeholder="user@university.edu"
-              value={form.email}
+              type="text"
+              name="username"
+              placeholder="Enter your username"
+              value={form.username}
               className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:ring-4 focus:ring-orange-100 focus:border-[#f37021] outline-none transition-all font-medium"
               onChange={handleChange}
               required

@@ -63,7 +63,7 @@ export default function UserProfile() {
   if (loading) return <p className="text-center py-10">Loading...</p>;
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10">
+    <div className="min-h-screen bg-slate-50 py-10">
       <div className="max-w-3xl mx-auto bg-white p-6 rounded shadow">
 
         <h1 className="text-3xl font-bold mb-6 text-center">My Profile</h1>
@@ -76,7 +76,7 @@ export default function UserProfile() {
             className="w-32 h-32 rounded-full shadow mb-4 object-cover"
           />
 
-          <label className="bg-blue-700 text-white py-2 px-4 rounded cursor-pointer">
+          <label className="bg-[#002147] text-white py-2 px-4 rounded cursor-pointer hover:bg-[#f37021] transition-colors">
             Upload New Photo
             <input type="file" className="hidden" onChange={handleImageUpload} />
           </label>
@@ -101,8 +101,8 @@ export default function UserProfile() {
             <input
               type="text"
               value={profile.email}
-              readOnly
-              className="w-full p-2 border bg-gray-200 rounded"
+              readOnly // Changed to slate-100 for consistency
+              className="w-full p-2 border bg-slate-100 rounded"
             />
           </div>
 
@@ -130,7 +130,7 @@ export default function UserProfile() {
             />
           </div>
 
-          <button className="w-full bg-blue-700 text-white p-3 rounded mt-4 font-bold">
+          <button className="w-full bg-[#002147] text-white p-3 rounded mt-4 font-bold hover:bg-[#f37021] transition-colors">
             Update Profile
           </button>
         </form>

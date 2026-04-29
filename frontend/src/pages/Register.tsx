@@ -25,7 +25,7 @@ export default function Register() {
 
     try {
       await api.post("/users/register/", form);
-      await auth.login(form.email, form.password);
+      await auth.login(form.username, form.password);
       toast.success("Account created! Redirecting to landing page...");
       navigate("/", { replace: true });
     } catch (err: any) {
@@ -66,7 +66,7 @@ export default function Register() {
                 name="username"
                 placeholder="johndoe_99"
                 required
-                className="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-blue-500 transition"
+                className="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-[#f37021] transition"
                 onChange={handleChange}
               />
             </div>
@@ -77,7 +77,7 @@ export default function Register() {
                 name="email"
                 placeholder="j.doe@pwani.ac.ke"
                 required
-                className="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-blue-500 transition"
+                className="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-[#f37021] transition"
                 onChange={handleChange}
               />
             </div>
@@ -88,7 +88,7 @@ export default function Register() {
                 name="password"
                 placeholder="••••••••"
                 required
-                className="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-blue-500 transition"
+                className="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-[#f37021] transition"
                 onChange={handleChange}
               />
             </div>
@@ -97,7 +97,7 @@ export default function Register() {
               <select
                 name="role"
                 value={form.role}
-                className="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-blue-500 bg-white transition"
+                className="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-[#f37021] bg-white transition"
                 onChange={handleChange}
               >
                 <option value="staff">Staff Member</option>
