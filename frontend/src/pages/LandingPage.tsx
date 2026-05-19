@@ -220,8 +220,8 @@ export default function LandingPage() {
       <section className="relative z-10 -mt-20 px-6">
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 md:grid-cols-3">
           <div className="group rounded-[2rem] bg-white p-8 shadow-xl transition-all hover:-translate-y-2 border-b-4 border-slate-200 hover:border-[#f37021]">
-            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 text-blue-500">
-              <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+            <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-500">
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
             </div>
             <h4 className="text-xl font-bold text-[#002147]">Staff Portal</h4>
             <p className="mt-3 text-sm font-medium leading-relaxed text-slate-500">
@@ -233,8 +233,8 @@ export default function LandingPage() {
           </div>
 
           <div className="group rounded-[2rem] bg-white p-8 shadow-xl transition-all hover:-translate-y-2 border-b-4 border-slate-200 hover:border-[#f37021]">
-            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-50 text-[#f37021]">
-              <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" /></svg>
+            <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-50 text-[#f37021]">
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" /></svg>
             </div>
             <h4 className="text-xl font-bold text-[#002147]">Technician Hub</h4>
             <p className="mt-3 text-sm font-medium leading-relaxed text-slate-500">
@@ -246,8 +246,8 @@ export default function LandingPage() {
           </div>
 
           <div className="group rounded-[2rem] bg-white p-8 shadow-xl transition-all hover:-translate-y-2 border-b-4 border-slate-200 hover:border-[#f37021]">
-            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 text-[#002147]">
-              <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+            <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-[#002147]">
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
             </div>
             <h4 className="text-xl font-bold text-[#002147]">Admin Core</h4>
             <p className="mt-3 text-sm font-medium leading-relaxed text-slate-500">
@@ -335,28 +335,29 @@ export default function LandingPage() {
 
     <footer className="border-t-2 border-[#f37021] bg-[#001529] py-6 text-white">
       <div className="mx-auto max-w-[1440px] px-10">
-        <div className="flex flex-col lg:flex-row justify-between gap-12 mb-8">
-          {/* Left Side Group: Branding & Platform */}
-          <div className="flex flex-col md:flex-row gap-12 lg:gap-20">
-            <div className="max-w-[240px]">
-              <div className="mb-3 flex items-center gap-2">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#f37021] text-2xl font-black text-white shadow-lg">
-                P
-              </div>
-                <div className="flex flex-col">
-                  <span className="text-sm font-black uppercase italic leading-none tracking-tight">
-                  Pwani <span className="text-[#f37021]">Maint</span>
-                </span>
-                  <span className="text-[8px] font-bold uppercase tracking-widest text-blue-400">
-                    Estate Management
-                  </span>
-                </div>
-              </div>
-              <p className="text-[10px] leading-relaxed text-slate-400">
-                Unified ecosystem for institutional asset tracking and maintenance orchestration at Pwani University.
-              </p>
-              </div>
+        {/* Branding Section */}
+        <div className="mb-8 max-w-[280px]">
+          <div className="mb-3 flex items-center gap-2">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#f37021] text-2xl font-black text-white shadow-lg">
+              P
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm font-black uppercase italic leading-none tracking-tight">
+                Pwani <span className="text-[#f37021]">Maint</span>
+              </span>
+              <span className="text-[8px] font-bold uppercase tracking-widest text-blue-400">
+                Estate Management
+              </span>
+            </div>
+          </div>
+          <p className="text-[10px] leading-relaxed text-slate-400">
+            Unified ecosystem for institutional asset tracking and maintenance orchestration at Pwani University.
+          </p>
+        </div>
 
+        {/* Links Section: Platform (Left) & Institutional (Right) */}
+        <div className="flex flex-col gap-8 md:flex-row md:justify-between mb-8">
+          <div className="flex flex-col gap-8 md:gap-12 lg:gap-20">
             <div>
               <h3 className="mb-3 text-[9px] font-black uppercase tracking-[0.3em] text-[#f37021]">
                 Platform
@@ -375,8 +376,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Right Side Group: Institutional & Location */}
-          <div className="flex flex-col md:flex-row gap-12 lg:gap-20">
+          <div className="flex flex-col gap-8 md:gap-12 lg:gap-20">
             <div>
               <h3 className="mb-3 text-[9px] font-black uppercase tracking-[0.3em] text-[#f37021]">
                 Institutional

@@ -135,7 +135,7 @@ export default function PortalsPage() {
                 className="group rounded-[2.5rem] border border-slate-200 bg-white p-10 shadow-sm transition-all duration-500 hover:-translate-y-1 hover:border-orange-200 hover:shadow-2xl"
               >
                 <div
-                  className={`mb-8 flex h-14 w-14 items-center justify-center rounded-2xl font-black shadow-lg transition-transform group-hover:scale-110 ${mod.color}`}
+                  className={`mb-8 flex h-12 w-12 items-center justify-center rounded-2xl font-black shadow-lg transition-transform group-hover:scale-110 ${mod.color}`}
                 >
                   0{i + 1}
                 </div>
