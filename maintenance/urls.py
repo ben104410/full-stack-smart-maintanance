@@ -1,5 +1,15 @@
 from django.urls import path
-from .views import CreateRequestView, ListRequestsView, assign_technician, update_status, export_requests_csv, technician_analytics, monthly_analytics, chart_data
+from .views import (
+    CreateRequestView, 
+    ListRequestsView, 
+    assign_technician, 
+    update_status, 
+    export_requests_csv, 
+    technician_analytics, 
+    monthly_analytics, 
+    chart_data,
+    CreateFeedbackView
+)
 from .pdf_views import export_requests_pdf
 
 urlpatterns = [
@@ -12,4 +22,5 @@ urlpatterns = [
     path('analytics/technicians/', technician_analytics),
     path('analytics/monthly/', monthly_analytics),
     path('analytics/charts/', chart_data),
+    path('feedback/', CreateFeedbackView.as_view()),
 ]

@@ -1,12 +1,9 @@
-import { useState, type FormEvent, type ChangeEvent, useContext } from "react";
+import { useState, type FormEvent, type ChangeEvent } from "react";
 import { Link } from "react-router-dom";
 import api from "../api/axios";
 import toast from "react-hot-toast";
-import { AuthContext } from "../context/AuthContext";
 
 export default function FeedbackPage() {
-  const auth = useContext(AuthContext);
-  const user = auth?.user;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [form, setForm] = useState({
     category: "improvement", // 'improvement' | 'review'
@@ -24,14 +21,11 @@ export default function FeedbackPage() {
     setIsSubmitting(true);
 
     try {
-      // Note: This assumes a backend endpoint /users/feedback/ exists
-      await api.post("/users/feedback/", {
-        ...form,
-        username: user?.username || "Anonymous",
-      });
+      // Pointing to the correct maintenance feedback endpoint
+      await api.post("/maintenance/feedback/", form);
       toast.success("Thank you for your feedback!");
       setForm({ category: "improvement", rating: 5, comment: "" });
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Feedback submission failed:", err);
       toast.error("Failed to send feedback. Please try again later.");
     } finally {

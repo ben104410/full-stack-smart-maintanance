@@ -1,6 +1,9 @@
 from django.db import models
 from django.conf import settings
-import qrcode
+try:
+    import qrcode
+except ImportError:
+    qrcode = None
 from django.core.files.base import ContentFile
 from io import BytesIO
 

@@ -8,7 +8,7 @@ from rest_framework.decorators import api_view, permission_classes
 from django.db.models import Count, Q
 from django.db.models.functions import TruncMonth
 from .models import MaintenanceRequest
-from .serializers import MaintenanceRequestSerializer
+from .serializers import MaintenanceRequestSerializer 
 from django.contrib.auth import get_user_model
 from notifications.models import Notification
 from activity.models import ActivityLog
@@ -16,6 +16,9 @@ from utils.email_service import send_notification
 from users.permissions import IsAdmin
 from datetime import timedelta
 
+# Import Feedback model and serializer (assuming they exist in .models and .serializers)
+from .models import Feedback 
+from .serializers import FeedbackSerializer
 
 User = get_user_model()
 
@@ -289,3 +292,37 @@ def chart_data(request):
     data["technician_load"] = tech_load
 
     return Response(data)
+
+
+# 9. Submit Feedback
+class CreateFeedbackView(generics.CreateAPIView):
+    """
+    API endpoint for authenticated users to submit feedback.
+    """
+    serializer_class = FeedbackSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        feedback_obj = serializer.save(user=self.request.user)
+
+        # Log activity
+        ActivityLog.objects.create(
+            user=self.request.user,
+            action="Submitted Feedback",
+            details=f"Feedback category: {feedback_obj.category}"
+        )
+
+        # Notify admin(s) about new feedback
+        admins = User.objects.filter(role='admin')
+        for admin in admins:
+            Notification.objects.create(
+                user=admin,
+                message=f"New feedback submitted by {self.request.user.username}: {feedback_obj.category}"
+            )
+            # Optionally send email notification to admin
+            send_notification(
+                admin.email,
+                "New Feedback Submitted",
+                f"A new feedback has been submitted by {self.request.user.username} (Category: {feedback_obj.category}). "
+                f"Comment: {feedback_obj.comment}"
+            )
