@@ -42,6 +42,15 @@ class CreateRequestView(generics.CreateAPIView):
             details=f"Request title: {request_obj.title}"
         )
 
+        # Notify admin(s) via Email as well to ensure they "see it"
+        admins = User.objects.filter(role='admin')
+        for admin in admins:
+            send_notification(
+                admin.email,
+                "New Maintenance Request Submitted",
+                f"A new request '{request_obj.title}' has been submitted by {self.request.user.username}."
+            )
+
         # Notify admin(s)
         admins = User.objects.filter(role='admin')
         for admin in admins:
@@ -62,7 +71,7 @@ class ListRequestsView(generics.ListAPIView):
 
 # 3. Assign Technician (Admin only)
 @api_view(['POST'])
-@permission_classes([permissions.IsAdminUser])
+@permission_classes([IsAdmin])
 def assign_technician(request, pk):
     try:
         maintenance = MaintenanceRequest.objects.get(id=pk)
@@ -95,8 +104,12 @@ def assign_technician(request, pk):
     # Send email notification
     send_notification(
         technician.email,
-        "New Maintenance Task Assigned",
-        f"You have been assigned a new task: {maintenance.title}"
+        "Action Required: New Maintenance Task Assigned",
+        f"Hello {technician.username},\n\n"
+        f"You have been assigned to the following maintenance task:\n"
+        f"Title: {maintenance.title}\n"
+        f"Priority: {maintenance.priority if hasattr(maintenance, 'priority') else 'N/A'}\n\n"
+        f"Please log in to the portal to view the details and update the status."
     )
 
     return Response({"message": "Technician assigned successfully"})
