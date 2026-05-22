@@ -1,4 +1,5 @@
-import { ReactNode, useContext } from "react";
+import { useContext } from "react";
+import type { ReactNode } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { LayoutDashboard, Users, ClipboardList, BarChart3, History, Wrench, FilePlus, LogOut, ShieldCheck, User as UserIcon } from "lucide-react";
@@ -26,10 +27,10 @@ export default function Layout({ children }: LayoutProps) {
   `;
 
   return (
-    <div className="flex min-h-screen bg-[#F8FAFC]">
+    <div className="min-h-screen bg-[#F8FAFC]">
       {/* Sidebar */}
-      <aside className="w-72 bg-slate-950 text-white flex flex-col border-r border-slate-800">
-        <div className="p-8">
+      <aside className="hidden lg:flex w-72 bg-white flex-col border-r border-slate-200">
+        <div className="p-6">
           <Link to="/portals" className="flex items-center gap-2 group">
             <div className="h-10 w-10 flex items-center justify-center rounded-xl bg-orange-600 text-xl font-black text-white shadow-inner group-hover:scale-105 transition-transform">
               P
@@ -79,7 +80,7 @@ export default function Layout({ children }: LayoutProps) {
         </nav>
 
         {/* User Profile Summary */}
-        <div className="p-4 border-t border-slate-800 bg-slate-900/50">
+        <div className="p-4 border-t border-slate-200 bg-white/50">
           <div className="flex items-center gap-3 mb-4 px-2">
             <div className="h-10 w-10 rounded-full bg-slate-800 flex items-center justify-center text-orange-500">
               <UserIcon size={20} />
@@ -95,21 +96,38 @@ export default function Layout({ children }: LayoutProps) {
         </div>
       </aside>
 
+      {/* Mobile top nav (visible on small screens) */}
+      <div className="lg:hidden bg-white border-b">
+        <div className="app-container flex items-center justify-between h-16">
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 flex items-center justify-center rounded-xl bg-orange-600 text-white font-black">P</div>
+            <div className="text-sm font-bold">Pwani Maint</div>
+          </div>
+          <nav className="flex gap-3 text-sm overflow-x-auto">
+            <Link to="/portals" className="px-3 py-2 rounded-md hover:bg-slate-100">Portals</Link>
+            <Link to="/profile" className="px-3 py-2 rounded-md hover:bg-slate-100">Profile</Link>
+            <Link to="/feedback" className="px-3 py-2 rounded-md hover:bg-slate-100">Feedback</Link>
+          </nav>
+        </div>
+      </div>
+
       {/* Page content */}
       <main className="flex-1 overflow-y-auto">
-        <header className="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-10 sticky top-0 z-10">
-          <div className="flex items-center gap-4">
-             <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-             <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">System Operational</span>
-          </div>
-          {user?.role === 'admin' && (
-            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200">
-              <ShieldCheck size={14} className="text-slate-500" />
-              <span className="text-[10px] font-black uppercase text-slate-500 tracking-tighter">Admin Access Level</span>
+        <header className="hidden lg:flex h-20 bg-white border-b border-slate-200 items-center justify-between sticky top-0 z-10">
+          <div className="app-container flex items-center justify-between">
+            <div className="flex items-center gap-4">
+               <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+               <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">System Operational</span>
             </div>
-          )}
+            {user?.role === 'admin' && (
+              <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200">
+                <ShieldCheck size={14} className="text-slate-500" />
+                <span className="text-[10px] font-black uppercase text-slate-500 tracking-tighter">Admin Access Level</span>
+              </div>
+            )}
+          </div>
         </header>
-        <div className="p-10 max-w-[1600px] mx-auto">
+        <div className="app-container py-8">
           {children}
         </div>
       </main>

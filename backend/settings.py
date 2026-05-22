@@ -139,7 +139,25 @@ STATIC_URL = 'static/'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "http://localhost:5174",
+    "http://127.0.0.1:5174",
 ]
+
+# Allow client to send credentials (cookies, auth headers) during development
+CORS_ALLOW_CREDENTIALS = True
+
+# Helpful for local dev: allow the Vite dev origin if ports change
+from django.core.exceptions import ImproperlyConfigured
+try:
+    # Add any additional allowed origins from environment variable (comma-separated)
+    extra = os.getenv('CORS_EXTRA_ORIGINS')
+    if extra:
+        for o in extra.split(','):
+            o = o.strip()
+            if o and o not in CORS_ALLOWED_ORIGINS:
+                CORS_ALLOWED_ORIGINS.append(o)
+except Exception:
+    raise
 
 # Cloudinary storage (use env vars for credentials)
 CLOUDINARY_STORAGE = {

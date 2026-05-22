@@ -1,14 +1,9 @@
 import { useState, useEffect } from "react";
 import api from "../../api/axios";
 import toast from "react-hot-toast";
-import { Plus, ClipboardList, Clock, CheckCircle2, AlertCircle, X, Search, Filter, Camera } from "lucide-react";
-
-interface Asset {
-  id: number;
-  name: string;
-  category: string;
-  location: string;
-}
+import { Plus, X, Camera, ClipboardList, Search, CheckCircle2, Clock, AlertCircle, Filter } from "lucide-react";
+import Card from "../../components/ui/Card";
+import Button from "../../components/ui/Button";
 
 interface MaintenanceRequest {
   id: number;
@@ -21,7 +16,6 @@ interface MaintenanceRequest {
 }
 
 export default function StaffDashboard() {
-  const [assets, setAssets] = useState<Asset[]>([]);
   const [requests, setRequests] = useState<MaintenanceRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -37,7 +31,7 @@ export default function StaffDashboard() {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    asset_id: "",
+    asset_name: "",
     priority: "Medium",
     location: "",
     picture: "",
@@ -72,11 +66,7 @@ export default function StaffDashboard() {
 
   const fetchData = async () => {
     try {
-      const [assetsRes, requestsRes] = await Promise.all([
-        api.get("maintenance/assets/"),
-        api.get("maintenance/requests/my/"),
-      ]);
-      setAssets(assetsRes.data);
+      const requestsRes = await api.get("maintenance/requests/my/");
       setRequests(requestsRes.data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -106,28 +96,27 @@ export default function StaffDashboard() {
 
   return (
     <div className="space-y-8 bg-slate-50 min-h-screen p-4 md:p-8">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight">Support <span className="text-indigo-600">Portal</span></h1>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Support <span className="text-indigo-600">Portal</span></h1>
           <p className="text-slate-600 font-medium">Report issues and track maintenance for campus assets.</p>
         </div>
-        <button 
-          onClick={() => setShowForm(!showForm)}
-          className={`${showForm ? 'bg-slate-200 text-slate-700' : 'bg-indigo-600 text-white hover:bg-indigo-700'} px-6 py-4 rounded-2xl font-bold shadow-lg transition-all flex items-center gap-2 active:scale-95`}
-        >
-          {showForm ? <><X size={20}/> Cancel</> : <><Plus size={20}/> New Maintenance Request</>}
-        </button>
+        <div>
+          <Button onClick={() => setShowForm(!showForm)} variant={showForm ? 'secondary' : 'primary'} className="flex items-center gap-3">
+            {showForm ? <><X size={16}/> Cancel</> : <><Plus size={16}/> New Maintenance Request</>}
+          </Button>
+        </div>
       </div>
 
       {showForm && (
-        <div className="bg-white p-8 md:p-10 rounded-[2.5rem] border border-slate-200 shadow-xl animate-in fade-in zoom-in-95 duration-300">
+        <Card className="animate-in fade-in duration-300">
           <form onSubmit={async (e) => {
             e.preventDefault();
             try {
               await api.post("maintenance/create/", formData);
               toast.success("Request submitted successfully!");
               setShowForm(false);
-              setFormData({ title: "", description: "", asset_id: "", priority: "Medium", location: "", picture: "" });
+              setFormData({ title: "", description: "", asset_name: "", priority: "Medium", location: "", picture: "" });
               setImagePreview(null);
               fetchData();
             } catch (error) { toast.error("Submission failed"); }
@@ -143,15 +132,14 @@ export default function StaffDashboard() {
                 />
               </div>
               <div className="space-y-3">
-                <label className="text-xs font-black uppercase tracking-widest text-slate-400">Select Asset</label>
-                <select 
-                  required className="w-full rounded-2xl bg-slate-50 border border-slate-200 px-5 py-4 text-slate-800 outline-none focus:bg-white focus:border-indigo-500 transition-all"
-                  value={formData.asset_id}
-                  onChange={(e) => setFormData({...formData, asset_id: e.target.value})}
-                >
-                  <option value="">-- Choose Asset --</option>
-                  {assets.map(a => <option key={a.id} value={a.id}>{a.name} ({a.location})</option>)}
-                </select>
+                <label className="text-xs font-black uppercase tracking-widest text-slate-400">Asset (optional)</label>
+                <input
+                  type="text"
+                  placeholder="Asset name or identifier (optional)"
+                  className="w-full rounded-2xl bg-slate-50 border border-slate-200 px-5 py-4 text-slate-800 outline-none focus:bg-white focus:border-indigo-500 transition-all"
+                  value={formData.asset_name}
+                  onChange={(e) => setFormData({...formData, asset_name: e.target.value})}
+                />
               </div>
               <div className="space-y-3">
                 <label className="text-xs font-black uppercase tracking-widest text-slate-400">Priority Level</label>
@@ -212,9 +200,9 @@ export default function StaffDashboard() {
                 onChange={(e) => setFormData({...formData, description: e.target.value})}
               />
             </div>
-            <button type="submit" className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black uppercase tracking-widest hover:bg-indigo-700 shadow-lg transition-all active:scale-[0.99]">Submit Request</button>
+            <Button type="submit" className="w-full" variant="primary">Submit Request</Button>
           </form>
-        </div>
+        </Card>
       )}
 
       <div className="bg-white rounded-[2rem] border border-slate-200 shadow-sm overflow-hidden">

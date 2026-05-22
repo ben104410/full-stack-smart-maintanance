@@ -56,19 +56,17 @@ export default function App() {
           path="/admin"
           element={
             <ProtectedRoute allowedRoles={['admin']}>
-              <Layout>
-                <AdminDashboard />
-              </Layout>
+              <AdminDashboard />
             </ProtectedRoute>
           }
         />
-        <Route path="/admin/users" element={<ProtectedRoute allowedRoles={['admin']}><Layout><UsersPage /></Layout></ProtectedRoute>} />
-        <Route path="/admin/assets" element={<ProtectedRoute allowedRoles={['admin']}><Layout><AssetsPage /></Layout></ProtectedRoute>} />
-        <Route path="/admin/requests" element={<ProtectedRoute allowedRoles={['admin']}><Layout><RequestsPage /></Layout></ProtectedRoute>} />
-        <Route path="/admin/analytics" element={<ProtectedRoute allowedRoles={['admin']}><Layout><AnalyticsPage /></Layout></ProtectedRoute>} />
-        <Route path="/admin/logs" element={<ProtectedRoute allowedRoles={['admin']}><Layout><ActivityLogsPage /></Layout></ProtectedRoute>} />
-        <Route path="/admin/requests/:id" element={<ProtectedRoute allowedRoles={['admin']}><Layout><RequestsPage /></Layout></ProtectedRoute>} />
-        <Route path="/users" element={<ProtectedRoute allowedRoles={['admin']}><Layout><UsersPage /></Layout></ProtectedRoute>} />
+        <Route path="/admin/users" element={<ProtectedRoute allowedRoles={['admin']}><UsersPage /></ProtectedRoute>} />
+        <Route path="/admin/assets" element={<ProtectedRoute allowedRoles={['admin']}><AssetsPage /></ProtectedRoute>} />
+        <Route path="/admin/requests" element={<ProtectedRoute allowedRoles={['admin']}><RequestsPage /></ProtectedRoute>} />
+        <Route path="/admin/analytics" element={<ProtectedRoute allowedRoles={['admin']}><AnalyticsPage /></ProtectedRoute>} />
+        <Route path="/admin/logs" element={<ProtectedRoute allowedRoles={['admin']}><ActivityLogsPage /></ProtectedRoute>} />
+        <Route path="/admin/requests/:id" element={<ProtectedRoute allowedRoles={['admin']}><RequestsPage /></ProtectedRoute>} />
+        <Route path="/users" element={<ProtectedRoute allowedRoles={['admin']}><UsersPage /></ProtectedRoute>} />
       </Routes>
     </Router>
   );
