@@ -25,9 +25,15 @@ export default function FeedbackPage() {
       await api.post("/maintenance/feedback/", form);
       toast.success("Thank you for your feedback!");
       setForm({ category: "improvement", rating: 5, comment: "" });
-    } catch (err: unknown) {
+    } catch (err: any) {
       console.error("Feedback submission failed:", err);
-      toast.error("Failed to send feedback. Please try again later.");
+      const errorData = err.response?.data;
+      const firstError = 
+        (errorData && typeof errorData === 'object' ? Object.values(errorData)[0] : null) ||
+        errorData?.detail || 
+        "Failed to send feedback. Please try again later.";
+      
+      toast.error(Array.isArray(firstError) ? firstError[0] : firstError);
     } finally {
       setIsSubmitting(false);
     }
@@ -35,14 +41,14 @@ export default function FeedbackPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
-      <header className="border-b-4 border-[#f37021] bg-[#002147] shadow-xl">
+      <header className="border-b-4 border-sky-400 bg-sky-900 shadow-xl">
         <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-8">
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f37021] text-xl font-black text-white shadow-inner">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-600 text-xl font-black text-white shadow-inner">
               P
             </div>
             <span className="text-xl font-black uppercase italic leading-none tracking-tighter text-white">
-              Pwani <span className="text-[#f37021]">Maint</span>
+              Pwani <span className="text-sky-400">Maint</span>
             </span>
           </Link>
           <Link
@@ -56,11 +62,11 @@ export default function FeedbackPage() {
 
       <main className="mx-auto max-w-3xl px-6 py-16">
         <div className="text-center mb-12">
-          <span className="text-xs font-black uppercase tracking-[0.25em] text-[#f37021]">
+          <span className="text-xs font-black uppercase tracking-[0.25em] text-sky-600">
             System Evolution
           </span>
-          <h1 className="mt-4 text-4xl font-black text-[#002147] md:text-5xl">
-            Feedback & <span className="text-[#f37021]">Reviews</span>
+          <h1 className="mt-4 text-4xl font-black text-sky-950 md:text-5xl">
+            Feedback & <span className="text-sky-600">Reviews</span>
           </h1>
           <p className="mt-4 text-lg text-slate-600 font-medium">
             Help us improve the Pwani Maintenance Portal by sharing your experience or suggesting new features.
@@ -75,7 +81,7 @@ export default function FeedbackPage() {
                 name="category"
                 value={form.category}
                 onChange={handleChange}
-                className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-[#f37021] outline-none transition-all font-medium"
+                className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-sky-500 outline-none transition-all font-medium"
               >
                 <option value="improvement">Improvement Suggestion</option>
                 <option value="review">System Review / Experience</option>
@@ -97,7 +103,7 @@ export default function FeedbackPage() {
                         onChange={handleChange}
                         className="hidden peer"
                       />
-                      <div className="text-center p-3 rounded-xl border-2 border-slate-100 bg-slate-50 cursor-pointer transition-all peer-checked:border-[#f37021] peer-checked:bg-orange-50 peer-checked:text-[#f37021] font-bold">
+                      <div className="text-center p-3 rounded-xl border-2 border-slate-100 bg-slate-50 cursor-pointer transition-all peer-checked:border-sky-600 peer-checked:bg-sky-50 peer-checked:text-sky-600 font-bold">
                         {num}
                       </div>
                     </label>
@@ -114,14 +120,14 @@ export default function FeedbackPage() {
                 value={form.comment}
                 onChange={handleChange}
                 placeholder="Tell us what's on your mind..."
-                className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-[#f37021] outline-none transition-all font-medium min-h-[150px]"
+                className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-sky-500 outline-none transition-all font-medium min-h-[150px]"
               ></textarea>
             </div>
 
             <button
               disabled={isSubmitting}
               type="submit"
-              className="w-full bg-[#002147] text-white p-5 rounded-2xl font-black text-lg hover:bg-[#f37021] shadow-lg transition-all active:scale-[0.98] disabled:opacity-70"
+              className="w-full bg-sky-700 text-white p-5 rounded-2xl font-black text-lg hover:bg-sky-800 shadow-lg transition-all active:scale-[0.98] disabled:opacity-70"
             >
               {isSubmitting ? "Sending..." : "Submit Feedback"}
             </button>

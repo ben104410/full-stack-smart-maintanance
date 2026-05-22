@@ -1,10 +1,19 @@
 import { type ChangeEvent, type FormEvent, useEffect, useState } from "react";
+
+interface UserProfileData {
+  username?: string;
+  email?: string;
+  role?: string;
+  profile_picture?: string;
+  phone?: string;
+  department?: string;
+}
 import api from "../api/axios";
 import toast from "react-hot-toast";
 
 export default function UserProfile() {
   const [loading, setLoading] = useState(true);
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<UserProfileData | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload`;
@@ -27,9 +36,11 @@ export default function UserProfile() {
     setLoading(true);
 
     try {
-      await api.put("/users/profile/", profile);
+      const response = await api.put("/users/profile/", profile);
+      setProfile(response.data);
+      setImagePreview(response.data.profile_picture);
       toast.success("Profile updated successfully");
-    } catch (err) {
+    } catch {
       toast.error("Failed to update profile");
     }
 
@@ -55,7 +66,7 @@ export default function UserProfile() {
 
       setProfile({ ...profile, profile_picture: data.secure_url });
       toast.success("Image uploaded");
-    } catch (err) {
+    } catch {
       toast.error("Image upload failed");
     }
   };
@@ -63,8 +74,8 @@ export default function UserProfile() {
   if (loading) return <p className="text-center py-10">Loading...</p>;
 
   return (
-    <div className="min-h-screen bg-slate-50 py-10">
-      <div className="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+    <div className="min-h-screen bg-sky-50 py-10">
+      <div className="max-w-3xl mx-auto bg-white/95 backdrop-blur p-6 rounded shadow">
 
         <h1 className="text-3xl font-bold mb-6 text-center">My Profile</h1>
 
@@ -73,13 +84,15 @@ export default function UserProfile() {
           <img
             src={imagePreview || "/default-avatar.png"}
             alt="Profile"
-            className="w-32 h-32 rounded-full shadow mb-4 object-cover"
+            className="w-10 h-10 rounded-md shadow mb-4 object-cover border border-sky-200"
+            style={{ objectPosition: 'top' }}
           />
 
-          <label className="bg-[#002147] text-white py-2 px-4 rounded cursor-pointer hover:bg-[#f37021] transition-colors">
+          <label className="bg-sky-700 text-white py-2 px-4 rounded cursor-pointer hover:bg-sky-800 transition-colors">
             Upload New Photo
             <input type="file" className="hidden" onChange={handleImageUpload} />
           </label>
+          <p className="mt-2 text-xs text-slate-50">Recommended: square passport-style photo</p>
         </div>
 
         <form onSubmit={handleUpdate} className="space-y-4 mt-8">
@@ -88,11 +101,11 @@ export default function UserProfile() {
             <label className="block font-semibold">Full Name</label>
             <input
               type="text"
-              value={profile.name || ""}
+              value={profile?.username ?? ""}
               onChange={(e) =>
-                setProfile({ ...profile, name: e.target.value })
+                setProfile({ ...profile, username: e.target.value })
               }
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border border-sky-200 rounded"
             />
           </div>
 
@@ -100,9 +113,9 @@ export default function UserProfile() {
             <label className="block font-semibold">Email (Read only)</label>
             <input
               type="text"
-              value={profile.email}
+              value={profile?.email ?? ""}
               readOnly // Changed to slate-100 for consistency
-              className="w-full p-2 border bg-slate-100 rounded"
+              className="w-full p-2 border bg-sky-50/50 rounded"
             />
           </div>
 
@@ -110,11 +123,11 @@ export default function UserProfile() {
             <label className="block font-semibold">Phone Number</label>
             <input
               type="text"
-              value={profile.phone || ""}
+              value={profile?.phone ?? ""}
               onChange={(e) =>
                 setProfile({ ...profile, phone: e.target.value })
               }
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border border-sky-200 rounded"
             />
           </div>
 
@@ -122,15 +135,15 @@ export default function UserProfile() {
             <label className="block font-semibold">Department</label>
             <input
               type="text"
-              value={profile.department || ""}
+              value={profile?.department ?? ""}
               onChange={(e) =>
                 setProfile({ ...profile, department: e.target.value })
               }
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border border-sky-200 rounded"
             />
           </div>
 
-          <button className="w-full bg-[#002147] text-white p-3 rounded mt-4 font-bold hover:bg-[#f37021] transition-colors">
+          <button className="w-full bg-sky-700 text-white p-3 rounded mt-4 font-bold hover:bg-sky-800 transition-colors">
             Update Profile
           </button>
         </form>

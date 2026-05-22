@@ -3,14 +3,14 @@ import { Link } from "react-router-dom";
 export default function CoreCapabilitiesPage() {
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
-      <header className="border-b-4 border-[#f37021] bg-[#002147] shadow-xl">
+      <header className="border-b-4 border-sky-400 bg-sky-900 shadow-xl">
         <div className="mx-auto flex h-24 max-w-7xl items-center justify-between px-8">
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f37021] text-xl font-black text-white shadow-inner">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-600 text-xl font-black text-white shadow-inner">
               P
             </div>
             <span className="text-xl font-black uppercase italic leading-none tracking-tighter text-white">
-              Pwani <span className="text-[#f37021]">Maint</span>
+              Pwani <span className="text-sky-400">Maint</span>
             </span>
           </Link>
           <Link
@@ -24,11 +24,11 @@ export default function CoreCapabilitiesPage() {
 
       <main className="mx-auto max-w-7xl px-6 py-24">
         <div className="mb-20 text-center">
-          <span className="text-xs font-black uppercase tracking-[0.25em] text-[#f37021]">
+          <span className="text-xs font-black uppercase tracking-[0.25em] text-sky-600">
             Core Capabilities
           </span>
-          <h1 className="mt-4 mb-6 text-4xl font-black tracking-tight text-[#002147] md:text-6xl">
-            Standardizing University <span className="text-[#f37021]">Maintenance</span>
+          <h1 className="mt-4 mb-6 text-4xl font-black tracking-tight text-sky-950 md:text-6xl">
+            Standardizing University <span className="text-sky-600">Maintenance</span>
           </h1>
           <p className="mx-auto max-w-3xl text-xl font-medium text-slate-600 leading-relaxed">
             Our centralized ecosystem ensures every piece of equipment and every facility 
@@ -41,7 +41,7 @@ export default function CoreCapabilitiesPage() {
             <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-900 text-2xl">
               📋
             </div>
-            <h3 className="mb-5 text-2xl font-black text-[#002147]">
+            <h3 className="mb-5 text-2xl font-black text-sky-900">
               Asset Management
             </h3>
             <p className="text-lg leading-relaxed text-slate-600 font-medium">
@@ -55,7 +55,7 @@ export default function CoreCapabilitiesPage() {
             <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-50 text-[#f37021] text-2xl">
               🛠️
             </div>
-            <h3 className="mb-5 text-2xl font-black text-[#002147]">
+            <h3 className="mb-5 text-2xl font-black text-sky-900">
               Maintenance Requests
             </h3>
             <p className="text-lg leading-relaxed text-slate-600 font-medium">
@@ -66,10 +66,10 @@ export default function CoreCapabilitiesPage() {
           </div>
 
           <div className="rounded-[2.5rem] bg-white p-12 shadow-sm border border-slate-100 transition-all hover:shadow-xl">
-            <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-[#002147] text-2xl">
+            <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-sky-900 text-2xl">
               🚀
             </div>
-            <h3 className="mb-5 text-2xl font-black text-[#002147]">
+            <h3 className="mb-5 text-2xl font-black text-sky-900">
               Technician Workflow
             </h3>
             <p className="text-lg leading-relaxed text-slate-600 font-medium">

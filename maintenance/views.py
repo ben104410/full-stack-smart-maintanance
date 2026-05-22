@@ -15,11 +15,39 @@ from activity.models import ActivityLog
 from utils.email_service import send_notification
 from users.permissions import IsAdmin
 from datetime import timedelta
+from django.http import JsonResponse
 
 # Import Feedback model and serializer (assuming they exist in .models and .serializers)
 from .models import Feedback 
 from .serializers import FeedbackSerializer
 
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def assets_list(request):
+    data = [
+        {"id": 1, "name": "Projector"},
+        {"id": 2, "name": "Laptop"},
+        {"id": 3, "name": "Air Conditioner"},
+        {"id": 4, "name": "Printer"},
+        {"id": 5, "name": "Desktop"},
+        {"id": 6, "name": "Chair"},
+        {"id": 7, "name": "Table"},
+    ]
+    return Response(data)
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def my_requests(request):
+    data = [
+        {"id": 1, "status": "pending"},
+        {"id": 2, "status": "approved"},
+        {"id": 3, "status": "rejected"},
+        {"id": 4, "status": "pending"},
+        {"id": 5, "status": "approved"},
+        {"id": 6, "status": "rejected"},
+        {"id": 7, "status": "pending"},
+    ]
+    return Response(data)
 User = get_user_model()
 
 # 1. Submit Request (Staff or Student)
@@ -28,7 +56,7 @@ class CreateRequestView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        asset_id = self.request.data.get("asset")
+        asset_id = self.request.data.get("asset") or None
 
         request_obj = serializer.save(
             created_by=self.request.user,
@@ -42,23 +70,20 @@ class CreateRequestView(generics.CreateAPIView):
             details=f"Request title: {request_obj.title}"
         )
 
-        # Notify admin(s) via Email as well to ensure they "see it"
+        # Notify admin(s) via Email and System Notification
         admins = User.objects.filter(role='admin')
         for admin in admins:
+            # Create in-app notification
+            Notification.objects.create(
+                user=admin,
+                message=f"New maintenance request submitted: {request_obj.title}"
+            )
+            # Send external email
             send_notification(
                 admin.email,
                 "New Maintenance Request Submitted",
                 f"A new request '{request_obj.title}' has been submitted by {self.request.user.username}."
             )
-
-        # Notify admin(s)
-        admins = User.objects.filter(role='admin')
-        for admin in admins:
-            Notification.objects.create(
-                user=admin,
-                message=f"New maintenance request submitted: {request_obj.title}"
-            )
-
 
 # 2. List All Requests
 class ListRequestsView(generics.ListAPIView):
@@ -67,6 +92,16 @@ class ListRequestsView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ['created_at', 'status']
+
+
+class ListMyRequestsView(generics.ListAPIView):
+    serializer_class = MaintenanceRequestSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['created_at', 'status']
+
+    def get_queryset(self):
+        return MaintenanceRequest.objects.filter(created_by=self.request.user).order_by('-created_at')
 
 
 # 3. Assign Technician (Admin only)
@@ -339,3 +374,28 @@ class CreateFeedbackView(generics.CreateAPIView):
                 f"A new feedback has been submitted by {self.request.user.username} (Category: {feedback_obj.category}). "
                 f"Comment: {feedback_obj.comment}"
             )
+
+
+# 10. My Tasks (Role-based)
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def my_tasks(request):
+    """
+    Retrieves tasks based on user role:
+    - Technicians see tasks assigned to them.
+    - Admins see all tasks.
+    - Other users see tasks they created.
+    """
+    if request.user.role == "technician":
+        tasks = MaintenanceRequest.objects.filter(assigned_to=request.user).order_by('-created_at')
+    elif request.user.role == "admin":
+        tasks = MaintenanceRequest.objects.all().order_by('-created_at')
+    else: # student, staff, etc.
+        tasks = MaintenanceRequest.objects.filter(created_by=request.user).order_by('-created_at')
+
+    data = [
+        {"title": t.title, "status": t.status, "created_at": t.created_at.strftime("%Y-%m-%d %H:%M:%S")}
+        for t in tasks
+    ]
+
+    return Response(data)

@@ -6,6 +6,7 @@ export default function NewRequestModal({ close, refresh }) {
   const [form, setForm] = useState({
     title: "",
     description: "",
+    location: "",
     priority: "Low",
     asset: "",
   });
@@ -23,7 +24,7 @@ export default function NewRequestModal({ close, refresh }) {
 
     const data = new FormData();
     Object.keys(form).forEach((key) => data.append(key, form[key]));
-    if (image) data.append("before_image", image);
+    if (image) data.append("image", image);
 
     try {
       await api.post("maintenance/create/", data);

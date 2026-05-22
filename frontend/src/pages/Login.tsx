@@ -13,7 +13,7 @@ export default function Login() {
 
   const { login } = auth
   const [form, setForm] = useState({
-    username: "",
+    email: "",
     password: "",
   })
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -27,9 +27,9 @@ export default function Login() {
     setIsSubmitting(true);
 
     try {
-      await login(form.username, form.password)
+      await login(form.email, form.password)
       toast.success("Welcome to the Pwani University Portal");
-      navigate("/", { replace: true });
+      navigate("/portals", { replace: true });
     } catch (err: any) {
       const errorData = err.response?.data;
       const firstError =
@@ -47,69 +47,74 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#002147] px-4 relative overflow-hidden">
-      {/* Background Decorative Elements */}
-      <div className="absolute top-0 left-0 w-full h-2 bg-[#f37021]"></div>
-      <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#f37021] rounded-full blur-[120px] opacity-10"></div>
-      
-      <div className="max-w-md w-full">
-        <div className="text-center mb-10">
-          <div className="w-20 h-20 bg-[#f37021] rounded-3xl mx-auto flex items-center justify-center text-white text-4xl font-black shadow-2xl mb-6 border-4 border-white/20">P</div>
-          <h1 className="text-4xl font-black text-white tracking-tight italic">Portal <span className="text-[#f37021] not-italic">Login</span></h1>
-          <p className="text-blue-200 mt-3 font-medium text-lg opacity-80 uppercase tracking-widest">Institutional Access</p>
-        </div>
+    <div className="relative min-h-screen overflow-hidden bg-sky-50 px-4 py-12 text-slate-900">
+      <div className="absolute inset-0 bg-[url('/images/bg-office.jpg')] bg-cover bg-center opacity-10" />
+      <div className="absolute inset-0 bg-gradient-to-b from-sky-100/80 via-sky-50/80 to-white/95" />
 
-        <form className="bg-white p-12 shadow-[0_20px_50px_rgba(0,0,0,0.3)] rounded-[2.5rem] border border-white/10" onSubmit={handleSubmit}>
-          <div className="mb-8">
-            <label className="block text-xs font-black text-slate-500 mb-2 uppercase tracking-[0.2em]">Username</label>
-            <input
-              type="text"
-              name="username"
-              placeholder="Enter your username"
-              value={form.username}
-              className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:ring-4 focus:ring-orange-100 focus:border-[#f37021] outline-none transition-all font-medium"
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="mb-10">
-            <div className="flex justify-between items-center mb-2">
-              <label className="block text-xs font-black text-slate-500 mb-2 uppercase tracking-[0.2em]">Security Password</label>
-              <button 
-                type="button"
-                onClick={() => toast.error("Please contact IT support to reset your password.")}
-                className="text-[10px] font-bold text-[#002147] hover:text-[#f37021] uppercase tracking-tighter"
-              >
-                Forgot?
-              </button>
+      <div className="relative mx-auto w-full max-w-md overflow-hidden rounded-[2rem] border border-sky-200 bg-white/95 shadow-2xl backdrop-blur-xl">
+        <div className="px-8 py-10 md:px-10 md:py-12">
+          <div className="mb-8 text-center">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-3xl bg-sky-600 text-white text-3xl font-black shadow-lg">
+              P
             </div>
-            <input
-              type="password"
-              name="password"
-              placeholder="••••••••"
-              value={form.password}
-              className="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:ring-4 focus:ring-orange-100 focus:border-[#f37021] outline-none transition-all font-medium"
-              onChange={handleChange}
-              required
-            />
+            <h2 className="text-3xl font-black text-slate-900">Sign In</h2>
+            <p className="mt-2 text-sm text-slate-500">Access the Pwani University maintenance portal</p>
           </div>
 
-          <button 
-            disabled={isSubmitting}
-            className="w-full bg-[#f37021] text-white p-5 rounded-2xl font-black text-lg hover:bg-[#d65a10] shadow-[0_10px_20px_rgba(243,112,33,0.3)] transition-all active:scale-[0.97] disabled:opacity-70" 
-            type="submit"
-          >
-            {isSubmitting ? "Authenticating..." : "Access Account"}
-          </button>
+          <form className="space-y-5" onSubmit={handleSubmit}>
+            <label className="block">
+              <span className="mb-2 block text-sm font-semibold text-slate-700">Email Address</span>
+              <input
+                type="email"
+                name="email"
+                placeholder="you@example.com"
+                value={form.email}
+                onChange={handleChange}
+                required
+                className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
+              />
+            </label>
 
-          <div className="mt-6 text-center">
-            <p className="text-slate-400 text-sm font-semibold">
-              New to the portal? <Link to="/register" className="text-[#002147] font-black hover:text-[#f37021] transition">Request Access</Link>
-            </p>
-          </div>
-        </form>
+            <label className="block">
+              <span className="mb-2 block text-sm font-semibold text-slate-700">Password</span>
+              <input
+                type="password"
+                name="password"
+                placeholder="Enter your password"
+                value={form.password}
+                onChange={handleChange}
+                required
+                className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
+              />
+            </label>
+
+            <button
+              type="button"
+              onClick={() => toast.error("Please contact the IT department at support@pwani-maint.local to reset your password.")}
+              className="text-left text-sm font-medium text-slate-500 hover:text-sky-600 transition-colors"
+            >
+              Forgot password?
+            </button>
+
+            <button
+              disabled={isSubmitting}
+              className="w-full rounded-2xl bg-sky-600 px-5 py-3 text-base font-semibold text-white shadow-lg transition hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60"
+              type="submit"
+            >
+              {isSubmitting ? "Logging in..." : "Login"}
+            </button>
+          </form>
+
+          <p className="mt-6 text-center text-sm text-slate-600">
+            Don’t have an account?{' '}
+            <Link to="/register" className="font-semibold text-sky-700 transition hover:text-sky-900">
+              Create Account
+            </Link>
+          </p>
+
+          <p className="mt-8 text-center text-xs text-slate-500">© 2026 AssetTrack. All rights reserved.</p>
+        </div>
       </div>
     </div>
-  )
+  );
 }

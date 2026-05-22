@@ -13,6 +13,12 @@ class MaintenanceRequest(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     location = models.CharField(max_length=255)
+    PRIORITY_CHOICES = [
+        ('Low', 'Low'),
+        ('Medium', 'Medium'),
+        ('High', 'High'),
+    ]
+    priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='Low')
     image = models.ImageField(upload_to='maintenance/', null=True, blank=True)
 
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='requests', on_delete=models.CASCADE)

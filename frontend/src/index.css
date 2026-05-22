@@ -24,7 +24,8 @@
   letter-spacing: 0.18px;
   color-scheme: light dark;
   color: var(--text);
-  background: var(--bg);
+  background: linear-gradient(135deg, #0A3D91 0%, #1e5aa8 50%, #2a73b8 100%);
+  background-attachment: fixed;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -52,19 +53,21 @@
 }
 
 #root {
-  width: 1126px;
+  width: 100%;
   max-width: 100%;
   margin: 0 auto;
   text-align: center;
-  border-inline: 1px solid var(--border);
   min-height: 100svh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  background: linear-gradient(135deg, #0A3D91 0%, #1e5aa8 50%, #2a73b8 100%);
+  background-attachment: fixed;
 }
 
 body {
   margin: 0;
+  background: transparent;
 }
 
 h1,

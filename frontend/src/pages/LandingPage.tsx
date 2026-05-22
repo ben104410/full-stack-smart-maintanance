@@ -1,420 +1,259 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { 
+  Hammer, 
+  ShieldCheck, 
+  BarChart3, 
+  Users, 
+  Mail, 
+  Phone, 
+  MapPin, 
+  Menu, 
+  X, 
+  ArrowRight,
+  Settings,
+  ClipboardList
+} from 'lucide-react';
 
 export default function LandingPage() {
-  const auth = useContext(AuthContext);
-  const navigate = useNavigate();
-  const user = auth?.user ?? null;
-  const logout = auth?.logout || (() => {});
-
-  const handleLogout = () => {
-    logout();
-    navigate("/");
-  };
-
-  const platformLinks = [
-    { label: "Core Capabilities", href: "/core-capabilities" },
-    { label: "Institutional Portals", href: "/portals" },
-    { label: "System Workflows", href: "/core-capabilities" },
-    { label: "Leave Feedback", href: "/feedback" },
-  ];
-
-  const legalLinks = [
-    { label: "Privacy Policy", href: "/privacy" },
-    { label: "Terms of Service", href: "/terms" },
-    { label: "Institutional Support", href: "/contact" },
-  ];
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#fcfdfe] font-sans antialiased text-slate-900 selection:bg-orange-100">
-      <header className="sticky top-0 z-50 border-b-4 border-[#f37021] bg-[#002147] shadow-2xl">
-        <div className="mx-auto flex h-24 max-w-[1440px] items-center justify-between px-8">
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-[#f37021] text-3xl font-black text-white shadow-inner">
-              P
-            </div>
-            <div className="flex flex-col">
-              <span className="text-2xl font-extrabold uppercase italic leading-none tracking-tighter text-white group-hover:text-orange-100 transition-colors">
-                Pwani <span className="text-[#f37021]">Maint</span>
-              </span>
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-300">
-                University Portal
-              </span>
-            </div>
-          </Link>
-
-          <nav className="hidden items-center gap-8 text-xs font-bold uppercase tracking-widest text-blue-100 md:flex">
-            <Link to="/core-capabilities" className="transition-colors hover:text-orange-400">
-              Core Capabilities
-            </Link>
-            <Link to="/portals" className="transition-colors hover:text-orange-400">
-              Portals
-            </Link>
-            <Link to="/core-capabilities" className="transition-colors hover:text-orange-400">
-              Workflows
-            </Link>
-            
-            <div className="h-8 w-[1px] bg-white/20 mx-2" />
-
-            <Link
-              to="/portals"
-              className="rounded-xl bg-[#f37021] px-5 py-2.5 text-white transition-all hover:bg-orange-600 shadow-lg"
-            >
-              Explore Portals
-            </Link>
-            {!user && (
-              <Link
-                to="/register"
-                className="rounded-xl border border-white/20 bg-white/5 px-5 py-2.5 text-white transition-all hover:bg-white/10"
-              >
-                Request Access
-              </Link>
-            )}
-
-            {user ? (
-              <>
-                <Link to="/profile" className="transition-colors hover:text-orange-400">
-                  Profile Hub
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="rounded-xl border border-white/20 bg-white/10 px-6 py-3 text-white shadow-lg transition-all active:scale-95 hover:bg-red-600"
-                >
-                  Sign Out
-                </button>
-              </>
-            ) : (
-              <>
-                <Link to="/login" className="transition-colors hover:text-orange-400">
-                  Login
-                </Link>
-              </>
-            )}
-          </nav>
-        </div>
-      </header>
-
-      <section className="relative overflow-hidden bg-[#002147] text-white">
-        <div className="pointer-events-none absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20" />
-        <div className="absolute -right-24 -top-24 h-96 w-96 rounded-full bg-[#f37021] opacity-20 blur-[120px]" />
-        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#f8fafc] to-transparent" />
-
-        <div className="relative mx-auto max-w-[1440px] px-8 py-24 lg:py-32">
-          <div className="grid items-center gap-14 lg:grid-cols-2">
-            <div className="max-w-2xl">
-              <span className="mb-8 inline-block rounded-lg border border-white/10 bg-white/5 px-5 py-2 text-[10px] font-black uppercase tracking-[0.3em] text-orange-400">
-                Smart Facilities Operations
-              </span>
-
-              <h1 className="mb-8 text-5xl font-extrabold leading-[0.95] tracking-tight md:text-7xl">
-                Empowering Institutional <span className="text-[#f37021]">Operational Excellence</span>
-              </h1>
-
-              <p className="mb-10 max-w-xl text-lg font-medium leading-relaxed text-blue-100/80 md:text-xl">
-                {user ? (
-                  <>
-                    Authenticated as{" "}
-                    <span className="font-bold text-white underline decoration-[#f37021] underline-offset-4">
-                      {user.username}
-                    </span>
-                    . Access your workspace, monitor requests, and manage operational
-                    workflows from one secure platform.
-                  </>
-                ) : (
-                  <>
-                    Integrated asset tracking, automated maintenance requests, technician
-                    coordination, and reporting in one reliable platform built for
-                    institutional teams.
-                  </>
-                )}
-              </p>
-
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
-                  <div className="text-3xl font-extrabold text-[#f37021]">24/7</div>
-                  <p className="mt-2 text-sm text-blue-100/80">
-                    Always-on visibility into requests, assets, and service activity.
-                  </p>
-                </div>
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
-                  <div className="text-3xl font-extrabold text-[#f37021]">3 Roles</div>
-                  <p className="mt-2 text-sm text-blue-100/80">
-                    Dedicated workflows for administrators, staff, and technicians.
-                  </p>
-                </div>
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
-                  <div className="text-3xl font-extrabold text-[#f37021]">1 Hub</div>
-                  <p className="mt-2 text-sm text-blue-100/80">
-                    Unified platform for reporting, coordination, and analytics.
-                  </p>
-                </div>
+    <div className="min-h-screen bg-gray-50 font-sans text-gray-900">
+      {/* Navigation */}
+      <nav className="sticky top-0 z-50 bg-blue-900 text-white shadow-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-20">
+            <div className="flex items-center space-x-3">
+              <div className="bg-yellow-500 p-2 rounded-lg">
+                <Settings className="h-8 w-8 text-blue-900" />
+              </div>
+              <div>
+                <span className="text-xl font-bold tracking-tight block leading-none">PWANI UNIVERSITY</span>
+                <span className="text-xs font-medium text-yellow-500 tracking-widest uppercase">Smart Maintenance System</span>
               </div>
             </div>
 
-            <div className="relative">
-              <div className="rounded-[2rem] border border-white/10 bg-white/10 p-6 shadow-2xl backdrop-blur-md md:p-8">
-                <div className="mb-8 flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-bold uppercase tracking-[0.25em] text-blue-100/60">
-                      System Status
-                    </p>
-                    <h3 className="mt-2 text-2xl font-extrabold tracking-tight">
-                      Live Performance Matrix
-                    </h3>
-                  </div>
-                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#f37021] text-3xl font-black shadow-lg">
-                    HQ
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="rounded-2xl bg-white p-5 text-slate-900 shadow-lg">
-                    <div className="mb-3 flex items-center justify-between">
-                      <p className="font-bold">Asset Compliance</p>
-                      <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700">
-                        Healthy
-                      </span>
-                    </div>
-                    <p className="text-sm text-slate-500">
-                      Track inventory, QR-coded assets, and department ownership with
-                      confidence.
-                    </p>
-                  </div>
-
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="rounded-2xl border border-white/10 bg-[#0b2d5a] p-5">
-                      <p className="mb-2 text-sm text-blue-100/70">Open Requests</p>
-                      <p className="text-4xl font-extrabold">128</p>
-                    </div>
-                    <div className="rounded-2xl border border-white/10 bg-[#0b2d5a] p-5">
-                      <p className="mb-2 text-sm text-blue-100/70">Completion Rate</p>
-                      <p className="text-4xl font-extrabold">94%</p>
-                    </div>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-                    <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-blue-100/60">
-                      Why teams choose this platform
-                    </p>
-                    <ul className="space-y-3 text-sm text-blue-50/90">
-                      <li>
-                        • Faster request handling with clear staff-to-technician
-                        workflows
-                      </li>
-                      <li>
-                        • Better accountability through status tracking and activity logs
-                      </li>
-                      <li>
-                        • Smarter decision-making with analytics and lifecycle visibility
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="relative z-10 -mt-20 px-6">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 md:grid-cols-3">
-          <div className="group rounded-[2rem] bg-white p-8 shadow-xl transition-all hover:-translate-y-2 border-b-4 border-slate-200 hover:border-[#f37021]">
-            <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-500">
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-            </div>
-            <h4 className="text-xl font-bold text-[#002147]">Staff Portal</h4>
-            <p className="mt-3 text-sm font-medium leading-relaxed text-slate-500">
-              Lodge maintenance requests, track progress of institutional repairs, and manage departmental inventory.
-            </p>
-            <Link to="/login" className="mt-6 inline-flex items-center text-xs font-bold uppercase tracking-widest text-[#f37021] group-hover:gap-3 transition-all">
-              Access Portal <span className="ml-2">→</span>
-            </Link>
-          </div>
-
-          <div className="group rounded-[2rem] bg-white p-8 shadow-xl transition-all hover:-translate-y-2 border-b-4 border-slate-200 hover:border-[#f37021]">
-            <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-50 text-[#f37021]">
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" /></svg>
-            </div>
-            <h4 className="text-xl font-bold text-[#002147]">Technician Hub</h4>
-            <p className="mt-3 text-sm font-medium leading-relaxed text-slate-500">
-              Receive real-time job assignments, update repair statuses, and document service logs on the go.
-            </p>
-            <Link to="/portals" className="mt-6 inline-flex items-center text-xs font-bold uppercase tracking-widest text-[#f37021] group-hover:gap-3 transition-all">
-              Access Portal <span className="ml-2">→</span>
-            </Link>
-          </div>
-
-          <div className="group rounded-[2rem] bg-white p-8 shadow-xl transition-all hover:-translate-y-2 border-b-4 border-slate-200 hover:border-[#f37021]">
-            <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-[#002147]">
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
-            </div>
-            <h4 className="text-xl font-bold text-[#002147]">Admin Core</h4>
-            <p className="mt-3 text-sm font-medium leading-relaxed text-slate-500">
-              Global oversight of university assets, audit logging, technician coordination, and operational analytics.
-            </p>
-            <Link to="/portals" className="mt-6 inline-flex items-center text-xs font-bold uppercase tracking-widest text-[#f37021] group-hover:gap-3 transition-all">
-              Access Portal <span className="ml-2">→</span>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <section id="workflow" className="bg-slate-900 px-6 py-24 text-white">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-16 text-center">
-            <span className="text-xs font-black uppercase tracking-[0.25em] text-[#f37021]">
-              Workflow
-            </span>
-            <h2 className="mt-4 text-4xl font-black md:text-5xl">
-              A clear service lifecycle from request to resolution
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 gap-12 text-center md:grid-cols-3">
-            {[
-              {
-                t: "Report",
-                d: "Staff identify issues, submit requests, and attach supporting information for faster assessment.",
-              },
-              {
-                t: "Coordinate",
-                d: "Administrators review, prioritize, and assign work while monitoring workloads and timelines.",
-              },
-              {
-                t: "Resolve",
-                d: "Technicians complete tasks, upload proof of work, and close service loops with full visibility.",
-              },
-            ].map((step, i) => (
-              <div
-                key={step.t}
-                className="relative rounded-3xl border border-white/10 bg-white/5 p-8"
+            {/* Desktop Nav */}
+            <div className="hidden md:flex items-center space-x-8">
+              <Link to="/" className="hover:text-yellow-500 font-medium transition-colors">Home</Link>
+              <Link to="/core-capabilities" className="hover:text-yellow-500 font-medium transition-colors">Capabilities</Link>
+              <Link to="/portals" className="hover:text-yellow-500 font-medium transition-colors">Portals</Link>
+              <Link to="/contact" className="hover:text-yellow-500 font-medium transition-colors">Contact</Link>
+              <Link to="/admin" className="hover:text-yellow-500 font-medium transition-colors">Admin Dashboard</Link>
+              <Link 
+                to="/login" 
+                className="bg-yellow-500 text-blue-900 px-6 py-2 rounded-full font-bold hover:bg-yellow-400 transition-all transform hover:scale-105"
               >
-                <div className="mb-4 text-6xl font-black opacity-10">{i + 1}</div>
-                <h3 className="mb-4 text-2xl font-black">{step.t}</h3>
-                <p className="leading-relaxed text-slate-300">{step.d}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-white px-6 py-20">
-        <div className="mx-auto max-w-6xl">
-          <div className="flex flex-col items-start justify-between gap-8 rounded-[2rem] bg-gradient-to-r from-[#002147] to-[#0b2d5a] px-8 py-12 text-white shadow-2xl md:px-12 md:py-16 lg:flex-row lg:items-center">
-            <div className="max-w-2xl">
-              <span className="text-xs font-black uppercase tracking-[0.25em] text-[#f37021]">
-                Get Started
-              </span>
-              <h2 className="mt-4 mb-4 text-3xl font-black md:text-4xl">
-                Bring structure and visibility to your maintenance operations
-              </h2>
-              <p className="text-lg leading-relaxed text-blue-100/80">
-                Use one centralized platform to manage assets, service requests,
-                accountability, and reporting across your institution.
-              </p>
-            </div>
-
-            <div className="flex w-full flex-col gap-4 sm:flex-row lg:w-auto">
-              <Link
-                to={user ? "/profile" : "/login"}
-                className="w-full rounded-2xl bg-[#f37021] px-8 py-4 text-center font-black transition-all hover:bg-[#d65a10] sm:w-auto"
-              >
-                {user ? "Go to Profile" : "Sign In"}
-              </Link>
-              <Link
-                to="/register"
-                className="w-full rounded-2xl border border-white/20 bg-white/10 px-8 py-4 text-center font-black transition-all hover:bg-white/15 sm:w-auto"
-              >
-                Create Account
+                Login
               </Link>
             </div>
+
+            {/* Mobile menu button */}
+            <div className="md:hidden flex items-center">
+              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-white">
+                {isMenuOpen ? <X className="h-8 w-8" /> : <Menu className="h-8 w-8" />}
+              </button>
+            </div>
           </div>
         </div>
-      </section>
 
-    <footer className="border-t-2 border-[#f37021] bg-[#001529] py-6 text-white">
-      <div className="mx-auto max-w-[1440px] px-10">
-        {/* Branding Section */}
-        <div className="mb-8 max-w-[280px]">
-          <div className="mb-3 flex items-center gap-2">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#f37021] text-2xl font-black text-white shadow-lg">
-              P
-            </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-black uppercase italic leading-none tracking-tight">
-                Pwani <span className="text-[#f37021]">Maint</span>
-              </span>
-              <span className="text-[8px] font-bold uppercase tracking-widest text-blue-400">
-                Estate Management
-              </span>
-            </div>
+        {/* Mobile Nav */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-blue-800 border-t border-blue-700 px-4 pt-2 pb-6 space-y-1">
+            <Link to="/" className="block px-3 py-2 text-base font-medium hover:bg-blue-700 rounded-md">Home</Link>
+            <Link to="/core-capabilities" className="block px-3 py-2 text-base font-medium hover:bg-blue-700 rounded-md">Capabilities</Link>
+            <Link to="/portals" className="block px-3 py-2 text-base font-medium hover:bg-blue-700 rounded-md">Portals</Link>
+            <Link to="/contact" className="block px-3 py-2 text-base font-medium hover:bg-blue-700 rounded-md">Contact</Link>
+            <Link to="/login" className="block px-3 py-2 text-base font-bold text-yellow-500">Login</Link>
+            <Link to="/admin" className="block px-3 py-2 text-base font-bold text-yellow-500">Admin Dashboard</Link>
           </div>
-          <p className="text-[10px] leading-relaxed text-slate-400">
-            Unified ecosystem for institutional asset tracking and maintenance orchestration at Pwani University.
+        )}
+      </nav>
+
+      {/* Hero Section */}
+      <div className="relative bg-blue-900 py-24 lg:py-32 overflow-hidden">
+        <div className="absolute inset-0 opacity-20">
+          <img 
+            src="https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&q=80&w=2000" 
+            alt="University Campus" 
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6">
+            Excellence in <span className="text-yellow-500">Facility Management</span>
+          </h1>
+          <p className="text-xl text-white font-medium mb-10 max-w-2xl mx-auto drop-shadow-sm">
+            Ensuring a conducive environment for learning through efficient maintenance tracking, asset management, and rapid technician response.
           </p>
-        </div>
-
-        {/* Links Section: Platform (Left) & Institutional (Right) */}
-        <div className="flex flex-col gap-8 md:flex-row md:justify-between mb-8">
-          <div className="flex flex-col gap-8 md:gap-12 lg:gap-20">
-            <div>
-              <h3 className="mb-3 text-[9px] font-black uppercase tracking-[0.3em] text-[#f37021]">
-                Platform
-              </h3>
-              <div className="space-y-1.5">
-                {platformLinks.map((link) => (
-                  <Link
-                    key={link.label}
-                    to={link.href}
-                    className="block text-[11px] font-medium text-slate-300 transition hover:text-[#f37021]"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
+          <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+            <Link 
+              to="/register" 
+              className="inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-bold rounded-xl text-blue-900 bg-yellow-500 hover:bg-yellow-400 shadow-xl transition-all"
+            >
+              Submit a Request <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
+            <Link 
+              to="/core-capabilities" 
+              className="inline-flex items-center justify-center px-8 py-4 border-2 border-white text-lg font-bold rounded-xl text-white hover:bg-white hover:text-blue-900 transition-all"
+            >
+              View Capabilities
+            </Link>
           </div>
-
-          <div className="flex flex-col gap-8 md:gap-12 lg:gap-20">
-            <div>
-              <h3 className="mb-3 text-[9px] font-black uppercase tracking-[0.3em] text-[#f37021]">
-                Institutional
-              </h3>
-              <div className="space-y-1.5">
-                {legalLinks.map((link) => (
-                  <Link
-                    key={link.label}
-                    to={link.href}
-                    className="block text-[11px] font-medium text-slate-300 transition hover:text-[#f37021]"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <h3 className="mb-3 text-[9px] font-black uppercase tracking-[0.3em] text-[#f37021]">
-                Location
-              </h3>
-              <p className="text-[11px] leading-relaxed text-slate-400">
-                Estate Management Dept, Block B<br />
-                Main Campus - Kilifi, Kenya.
-              </p>
-              <p className="mt-1 text-[11px] font-bold text-blue-400">
-                support@pwani-maint.local
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-4 border-t border-white/5 pt-5 text-[9px] font-bold uppercase tracking-widest text-slate-500 md:flex-row md:items-center md:justify-between">
-          <p>© {new Date().getFullYear()} Pwani University . Institutional Excellence .</p>
-          <p>v2.4.0-Stable</p>
         </div>
       </div>
-    </footer>
+
+      {/* Portal Access Cards */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 relative z-10 pb-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Staff/Student Portal */}
+          <div className="bg-white rounded-2xl shadow-2xl p-8 transform transition-all hover:-translate-y-2 border-b-4 border-blue-900">
+            <div className="bg-blue-100 w-14 h-14 rounded-full flex items-center justify-center mb-6">
+              <Users className="h-8 w-8 text-blue-900" />
+            </div>
+            <h3 className="text-2xl font-bold mb-3">Community Portal</h3>
+            <p className="text-slate-800 font-medium mb-6">For students and staff to report damaged facilities, track request status, and provide feedback.</p>
+            <Link to="/login" className="text-blue-900 font-bold inline-flex items-center hover:text-yellow-600">
+              Access Portal <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </div>
+
+          {/* Technician Portal */}
+          <div className="bg-white rounded-2xl shadow-2xl p-8 transform transition-all hover:-translate-y-2 border-b-4 border-yellow-500">
+            <div className="bg-yellow-100 w-14 h-14 rounded-full flex items-center justify-center mb-6">
+              <Hammer className="h-8 w-8 text-yellow-600" />
+            </div>
+            <h3 className="text-2xl font-bold mb-3">Technician Hub</h3>
+            <p className="text-slate-800 font-medium mb-6">Manage assigned maintenance tasks, update repair progress, and log facility conditions in real-time.</p>
+            <Link to="/login" className="text-blue-900 font-bold inline-flex items-center hover:text-yellow-600">
+              Access Portal <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </div>
+
+          {/* Admin Portal */}
+          <div className="bg-white rounded-2xl shadow-2xl p-8 transform transition-all hover:-translate-y-2 border-b-4 border-blue-900">
+            <div className="bg-blue-100 w-14 h-14 rounded-full flex items-center justify-center mb-6">
+              <ShieldCheck className="h-8 w-8 text-blue-900" />
+            </div>
+            <h3 className="text-2xl font-bold mb-3">Administration</h3>
+            <p className="text-slate-800 font-medium mb-6">Oversee campus-wide maintenance, manage assets, assign personnel, and monitor analytics.</p>
+            <Link to="/login" className="text-blue-900 font-bold inline-flex items-center hover:text-yellow-600">
+              Access Portal <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Features Section */}
+      <div className="bg-white py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-blue-900 mb-4 tracking-tight">Core System Capabilities</h2>
+            <p className="text-slate-700 font-semibold max-w-2xl mx-auto text-lg">Powered by advanced tracking to ensure Pwani University facilities remain top-tier.</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+            <div className="text-center">
+              <div className="bg-blue-100 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
+                <ClipboardList className="h-8 w-8 text-blue-900" />
+              </div>
+              <h4 className="text-xl font-bold text-blue-900 mb-2">Smart Logging</h4>
+              <p className="text-slate-700 font-medium">Easy maintenance requests with image uploads and location tagging.</p>
+            </div>
+            <div className="text-center">
+              <div className="bg-blue-100 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
+                <BarChart3 className="h-8 w-8 text-blue-900" />
+              </div>
+              <h4 className="text-xl font-bold text-blue-900 mb-2">Real-time Tracking</h4>
+              <p className="text-slate-700 font-medium">Live status updates from "In Progress" to "Completed" for transparency.</p>
+            </div>
+            <div className="text-center">
+              <div className="bg-blue-100 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
+                <Settings className="h-8 w-8 text-blue-900" />
+              </div>
+              <h4 className="text-xl font-bold text-blue-900 mb-2">Asset Life-cycle</h4>
+              <p className="text-slate-700 font-medium">Comprehensive database of campus assets including condition and history.</p>
+            </div>
+            <div className="text-center">
+              <div className="bg-blue-100 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
+                <ShieldCheck className="h-8 w-8 text-blue-900" />
+              </div>
+              <h4 className="text-xl font-bold text-blue-900 mb-2">Accountability</h4>
+              <p className="text-slate-700 font-medium">Full audit logs and activity tracking for administrative oversight.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Contact & Footer */}
+      <footer className="bg-blue-950 text-white pt-20 pb-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12 border-b border-blue-800 pb-12">
+            <div>
+              <h5 className="text-yellow-500 font-bold uppercase mb-6 tracking-widest text-sm">Quick Links</h5>
+              <ul className="space-y-4 text-white font-medium">
+                <li><Link to="/portals" className="hover:text-yellow-500 transition-colors">Portals</Link></li>
+                <li><Link to="/core-capabilities" className="hover:text-yellow-500 transition-colors">Capabilities</Link></li>
+                <li><Link to="/privacy" className="hover:text-yellow-500 transition-colors">Privacy Policy</Link></li>
+                <li><Link to="/terms" className="hover:text-yellow-500 transition-colors">Terms of Service</Link></li>
+              </ul>
+            </div>
+
+            <div className="flex flex-col items-center text-center space-y-6">
+              <div className="flex items-center space-x-3">
+                <Settings className="h-8 w-8 text-yellow-500" />
+                <span className="text-xl font-bold uppercase tracking-wider">Pwani SMS</span>
+              </div>
+              <p className="text-white font-medium max-w-xs">
+                Official facility maintenance and asset tracking portal for Pwani University. Dedicated to institutional growth.
+              </p>
+            </div>
+
+            <div className="md:text-right">
+              <h5 className="text-yellow-500 font-bold uppercase mb-6 tracking-widest text-sm">Portals</h5>
+              <ul className="space-y-4 text-white font-medium">
+                <li><Link to="/login" className="hover:text-yellow-500 transition-colors">Student/Staff Login</Link></li>
+                <li><Link to="/login" className="hover:text-yellow-500 transition-colors">Technician Hub</Link></li>
+                <li><Link to="/login" className="hover:text-yellow-500 transition-colors">Admin Dashboard</Link></li>
+                <li><Link to="/feedback" className="hover:text-yellow-500 transition-colors">System Feedback</Link></li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="mb-16 flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16 text-white font-medium text-center md:text-left">
+            <div className="flex items-center">
+              <Phone className="h-5 w-5 mr-3 text-yellow-500" />
+              <span>+254 700 000000</span>
+            </div>
+            <div className="flex items-center">
+              <Mail className="h-5 w-5 mr-3 text-yellow-500" />
+              <span>maintenance@pu.ac.ke</span>
+            </div>
+            <div className="flex items-center">
+              <MapPin className="h-5 w-5 mr-3 text-yellow-500" />
+              <span>Kilifi, Kenya | P.O. Box 195-80108</span>
+            </div>
+          </div>
+
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <p className="text-blue-400 text-sm">
+              &copy; {new Date().getFullYear()} Pwani University Smart Maintenance System. All Rights Reserved.
+            </p>
+            <div className="flex space-x-6">
+              {/* Social Media Placeholders */}
+              <div className="w-8 h-8 rounded-full bg-blue-900 flex items-center justify-center hover:bg-yellow-500 transition-colors cursor-pointer">
+                <span className="sr-only">Facebook</span>
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              </div>
+              <div className="w-8 h-8 rounded-full bg-blue-900 flex items-center justify-center hover:bg-yellow-500 transition-colors cursor-pointer">
+                <span className="sr-only">Twitter</span>
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.84 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

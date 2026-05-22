@@ -20,17 +20,22 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // Load logged-in user on page refresh
   const loadUser = async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("access");
     if (!token) {
       setLoading(false);
       return;
     }
 
     try {
+      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       const res = await api.get("users/profile/");
       setUser(res.data);
-    } catch {
-      localStorage.removeItem("token");
+    } catch (err: any) {
+      if (err.response?.status !== 401) {
+        console.error("Profile verification failed:", err);
+      }
+      localStorage.removeItem("access");
+      delete api.defaults.headers.common["Authorization"];
     }
     setLoading(false);
   };
@@ -40,13 +45,25 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   const login = async (email: string, password: string): Promise<void> => {
-    const res = await api.post("users/login/", { email, password });
-    localStorage.setItem("token", res.data.access);
+    const res = await api.post("login/", { email, password });
+    console.log("Login Response Data:", res.data); // STEP 1: Check response
+    
+    const token = res.data.access || res.data.token; // STEP 2: Support both keys
+    localStorage.setItem("refresh", res.data.refresh);
+
+    if (token) {
+      localStorage.setItem("access", token);
+      // Update axios headers immediately for subsequent calls
+      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    }
+
     await loadUser();
   };
 
   const logout = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+    delete api.defaults.headers.common["Authorization"];
     setUser(null);
   };
 

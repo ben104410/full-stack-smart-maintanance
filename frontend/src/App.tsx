@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import LandingPage from "./pages/LandingPage";
 import Login from "./pages/Login";
@@ -9,7 +9,17 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import UserProfile from "./pages/UserProfile";
 import ContactPage from "./pages/ContactPage";
+import AdminDashboard from "./pages/AdminDashboard";
+import TechnicianDashboard from "./pages/technician/TechnicianDashboard";
+import StaffDashboard from "./pages/staff/StaffDashboard";
+import UsersPage from "./pages/user/UsersPage";
+import FeedbackPage from "./pages/FeedbackPage";
+import AssetsPage from "./pages/admin/AssetsPage";
+import RequestsPage from "./pages/admin/RequestPage";
+import AnalyticsPage from "./pages/admin/AnalyticsPage";
+import ActivityLogsPage from "./pages/admin/ActivityLogsPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Layout from "./layouts/Layout";
 
 export default function App() {
   return (
@@ -36,12 +46,29 @@ export default function App() {
         {/* Authenticated Portals & Profile */}
         <Route path="/portals" element={<ProtectedRoute><PortalsPage /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
+        <Route path="/feedback" element={<ProtectedRoute><FeedbackPage /></ProtectedRoute>} />
+        <Route path="/dashboard" element={<Navigate to="/portals" replace />} />
         
         {/* Role-Based Dashboard Placeholders (To be developed) */}
-        <Route path="/staff/dashboard" element={<ProtectedRoute allowedRoles={['staff', 'admin']}><div className="p-20 text-center font-bold">Staff Workspace Placeholder</div></ProtectedRoute>} />
-        <Route path="/technician/dashboard" element={<ProtectedRoute allowedRoles={['technician', 'admin']}><div className="p-20 text-center font-bold">Technician Workspace Placeholder</div></ProtectedRoute>} />
-        <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin']}><div className="p-20 text-center font-bold">Administrative Command Center Placeholder</div></ProtectedRoute>} />
-        <Route path="/admin/analytics" element={<ProtectedRoute allowedRoles={['admin']}><div className="p-20 text-center font-bold">Operational Analytics Placeholder</div></ProtectedRoute>} />
+        <Route path="/staff/dashboard" element={<ProtectedRoute allowedRoles={['staff', 'admin']}><Layout><StaffDashboard /></Layout></ProtectedRoute>} />
+        <Route path="/technician/dashboard" element={<ProtectedRoute allowedRoles={['technician', 'admin']}><Layout><TechnicianDashboard /></Layout></ProtectedRoute>} />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <Layout>
+                <AdminDashboard />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/admin/users" element={<ProtectedRoute allowedRoles={['admin']}><Layout><UsersPage /></Layout></ProtectedRoute>} />
+        <Route path="/admin/assets" element={<ProtectedRoute allowedRoles={['admin']}><Layout><AssetsPage /></Layout></ProtectedRoute>} />
+        <Route path="/admin/requests" element={<ProtectedRoute allowedRoles={['admin']}><Layout><RequestsPage /></Layout></ProtectedRoute>} />
+        <Route path="/admin/analytics" element={<ProtectedRoute allowedRoles={['admin']}><Layout><AnalyticsPage /></Layout></ProtectedRoute>} />
+        <Route path="/admin/logs" element={<ProtectedRoute allowedRoles={['admin']}><Layout><ActivityLogsPage /></Layout></ProtectedRoute>} />
+        <Route path="/admin/requests/:id" element={<ProtectedRoute allowedRoles={['admin']}><Layout><RequestsPage /></Layout></ProtectedRoute>} />
+        <Route path="/users" element={<ProtectedRoute allowedRoles={['admin']}><Layout><UsersPage /></Layout></ProtectedRoute>} />
       </Routes>
     </Router>
   );

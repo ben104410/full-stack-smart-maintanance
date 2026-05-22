@@ -7,3 +7,15 @@ class IsAdmin(permissions.BasePermission):
     """
     def has_permission(self, request, view):
         return request.user and request.user.is_authenticated and request.user.role == 'admin'
+
+
+def is_admin(user):
+    return user.role == "admin"
+
+
+def is_technician(user):
+    return user.role == "technician"
+
+
+def is_staff(user):
+    return user.role == "staff"
