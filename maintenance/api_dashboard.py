@@ -15,15 +15,31 @@ def dashboard_stats(request):
     Aggregates high-level metrics for the administrator dashboard.
     """
     total_users = User.objects.count()
-    technicians = User.objects.filter(role="technician").count()
+    technicians_count = User.objects.filter(role="technician").count()
     total_tasks = MaintenanceRequest.objects.count()
+    pending_tasks = MaintenanceRequest.objects.filter(status="pending").count()
     completed_tasks = MaintenanceRequest.objects.filter(status="completed").count()
+    in_progress_tasks = MaintenanceRequest.objects.filter(status="in_progress").count()
+    assigned_tasks = MaintenanceRequest.objects.filter(status="assigned").count()
+    total_assets = Asset.objects.count()
+    
+    # Calculate Completion Rate
+    completion_rate = (completed_tasks / total_tasks * 100) if total_tasks > 0 else 0
 
     return Response({
         "total_users": total_users,
-        "technicians": technicians,
+        "technicians": technicians_count,
+        "total_technicians": technicians_count, # Support both key naming conventions
         "total_tasks": total_tasks,
+        "total_requests": total_tasks,          # Support both key naming conventions
+        "pending": pending_tasks,               # Added for AnalyticsPage
+        "pending_requests": pending_tasks,      
+        "assigned": assigned_tasks,             # Added for AnalyticsPage
         "completed_tasks": completed_tasks,
+        "completed": completed_tasks,           # Support both key naming conventions
+        "in_progress": in_progress_tasks,
+        "total_assets": total_assets,
+        "completion_rate": round(completion_rate, 2),
     })
 
 @api_view(['GET'])
@@ -58,6 +74,33 @@ def assets_list(request):
         for a in assets
     ]
     return Response(data)
+
+@api_view(['POST'])
+@permission_classes([IsAdmin])
+def create_asset(request):
+    """
+    Creates a new physical asset.
+    """
+    asset = Asset.objects.create(
+        name=request.data.get('name'),
+        category=request.data.get('category'),
+        location=request.data.get('location'),
+        condition=request.data.get('condition', 'Good')
+    )
+    return Response({"id": asset.id, "message": "Asset created successfully"}, status=201)
+
+@api_view(['DELETE'])
+@permission_classes([IsAdmin])
+def delete_asset(request, pk):
+    """
+    Removes an asset from the system.
+    """
+    try:
+        asset = Asset.objects.get(pk=pk)
+        asset.delete()
+        return Response({"message": "Asset deleted successfully"}, status=204)
+    except Asset.DoesNotExist:
+        return Response({"error": "Asset not found"}, status=404)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -107,18 +150,18 @@ def create_request(request):
     return Response({"id": new_request.id, "message": "Request created successfully"}, status=201)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated]) # Authenticated users can access, but role check inside
+@permission_classes([IsAdmin])
 def users_list(request):
     """
     Returns all registered users and their primary assigned roles/groups.
     """
-    if request.user.role != "admin":
-        return Response({"error": "Not allowed"}, status=403)
-
     users = User.objects.all()
     data = [
         {
+            "id": u.id,
             "username": u.username,
+            "first_name": u.first_name,
+            "last_name": u.last_name,
             "email": u.email,
             "role": u.role, # Use the custom role field
         }

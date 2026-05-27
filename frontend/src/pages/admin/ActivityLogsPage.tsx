@@ -18,7 +18,7 @@ export default function ActivityLogsPage() {
 
   const fetchLogs = () => {
     api
-      .get("activity/")
+      .get("activity/logs/")
       .then((res) => setLogs(res.data))
       .catch((err) => console.log(err));
   };
@@ -28,18 +28,26 @@ export default function ActivityLogsPage() {
   }, []);
 
   const filteredLogs = logs.filter((log) => {
+    const username = log.user?.username?.toLowerCase() || "system";
+    const action = log.action?.toLowerCase() || "";
+    const details = log.details?.toLowerCase() || "";
+    const searchValue = search.toLowerCase();
+
     const matchesSearch =
-      log.user?.username.toLowerCase().includes(search.toLowerCase()) ||
-      log.action.toLowerCase().includes(search.toLowerCase()) ||
-      log.details?.toLowerCase().includes(search.toLowerCase());
+      username.includes(searchValue) ||
+      action.includes(searchValue) ||
+      details.includes(searchValue);
 
     const matchesAction =
       actionFilter === "All" ? true : log.action === actionFilter;
 
+    // Safely handle potential missing or invalid timestamps
     const matchesDate =
-      dateFilter === ""
+      !dateFilter
         ? true
-        : new Date(log.timestamp).toISOString().slice(0, 10) === dateFilter;
+        : log.timestamp 
+          ? new Date(log.timestamp).toISOString().slice(0, 10) === dateFilter
+          : false;
 
     return matchesSearch && matchesAction && matchesDate;
   });

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../../api/axios";
 import AdminLayout from "../../layouts/AdminLayout";
 import AssignTechnicianModal from "../../components/AssignTechnicianModal";
+import toast from "react-hot-toast";
 
 interface Request {
   id: number;
@@ -30,13 +31,26 @@ export default function RequestsPage() {
     fetchRequests();
   }, []);
 
+  const handleVerify = async (id: number) => {
+    try {
+      // Status 'completed' is often verified by admins to close the ticket
+      await api.post(`maintenance/update-status/${id}/`, { status: "completed" });
+      toast.success("Request verified and closed.");
+      fetchRequests();
+    } catch (err) {
+      toast.error("Failed to verify request.");
+    }
+  };
+
   const filteredRequests = requests.filter((req) => {
     const matchesSearch =
       req.title.toLowerCase().includes(search.toLowerCase()) ||
       req.description.toLowerCase().includes(search.toLowerCase());
 
     const matchesStatus =
-      statusFilter === "All" ? true : req.status === statusFilter;
+      statusFilter === "All" 
+        ? true 
+        : req.status.toLowerCase() === statusFilter.toLowerCase();
 
     return matchesSearch && matchesStatus;
   });
@@ -112,14 +126,14 @@ export default function RequestsPage() {
                 </span>
               </td>
 
-              <td className="p-2">{req.status}</td>
+              <td className="p-2 capitalize">{req.status.replace('_', ' ')}</td>
 
               <td className="p-2">
                 {new Date(req.created_at).toLocaleString()}
               </td>
 
               <td className="p-2 flex gap-2">
-                {req.status === "Pending" && (
+                {req.status.toLowerCase() === "pending" && (
                   <button
                     onClick={() => setAssignData(req)}
                     className="bg-blue-600 text-white px-3 py-1 rounded"
@@ -128,8 +142,11 @@ export default function RequestsPage() {
                   </button>
                 )}
 
-                {req.status === "Completed" && (
-                  <button className="bg-green-600 text-white px-3 py-1 rounded">
+                {req.status.toLowerCase() === "completed" && (
+                  <button 
+                    onClick={() => handleVerify(req.id)}
+                    className="bg-green-600 text-white px-3 py-1 rounded"
+                  >
                     Verify
                   </button>
                 )}

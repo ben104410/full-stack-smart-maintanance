@@ -10,6 +10,12 @@ export default function UpdateStatusModal({ task, close, refresh }) {
   const updateStatus = async (e) => {
     e.preventDefault();
 
+    if (!task || !task.id) {
+      console.error("UpdateStatusModal: Task or Task ID is missing", task);
+      alert("Error: Task ID is missing. Please refresh and try again.");
+      return;
+    }
+
     const form = new FormData();
     form.append("status", status);
     form.append("technician_notes", notes);
@@ -17,7 +23,8 @@ export default function UpdateStatusModal({ task, close, refresh }) {
     if (afterImage) form.append("after_image", afterImage);
 
     try {
-      await api.put(`maintenance/update/${task.id}/`, form);
+      // Note: verify if the endpoint should be 'update' or 'update-status'
+      await api.put(`maintenance/update-status/${task.id}/`, form);
       refresh();
       close();
     } catch (err) {

@@ -40,7 +40,13 @@ export default function PortalsPage() {
       color: "bg-sky-800 text-white", 
       path: "/admin/analytics",
     },
-  ].filter((mod) => !mod.role || user?.role === mod.role || user?.role === "admin");
+  ].filter((mod) => 
+    {
+      const userRole = user?.role?.toLowerCase();
+      const moduleRole = mod.role?.toLowerCase();
+      return userRole === "admin" || userRole === moduleRole;
+    }
+  );
 
   return (
     <div className="min-h-screen bg-sky-50/30 font-sans antialiased text-slate-900">

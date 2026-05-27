@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import api from "../../api";
+import api from "../../api/axios";
 import AdminLayout from "../../layouts/AdminLayout";
 import Card from "../../components/ui/Card";
 
@@ -8,7 +8,7 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState<any>(null);
 
   useEffect(() => {
-    api.get("dashboard/stats/")
+    api.get("maintenance/dashboard/")
       .then((res) => setStats(res.data))
       .catch((err) => console.log(err));
   }, []);

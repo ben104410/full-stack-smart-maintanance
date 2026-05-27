@@ -21,33 +21,6 @@ from django.http import JsonResponse
 from .models import Feedback 
 from .serializers import FeedbackSerializer
 
-@api_view(['GET'])
-@permission_classes([permissions.IsAuthenticated])
-def assets_list(request):
-    data = [
-        {"id": 1, "name": "Projector"},
-        {"id": 2, "name": "Laptop"},
-        {"id": 3, "name": "Air Conditioner"},
-        {"id": 4, "name": "Printer"},
-        {"id": 5, "name": "Desktop"},
-        {"id": 6, "name": "Chair"},
-        {"id": 7, "name": "Table"},
-    ]
-    return Response(data)
-
-@api_view(['GET'])
-@permission_classes([permissions.IsAuthenticated])
-def my_requests(request):
-    data = [
-        {"id": 1, "status": "pending"},
-        {"id": 2, "status": "approved"},
-        {"id": 3, "status": "rejected"},
-        {"id": 4, "status": "pending"},
-        {"id": 5, "status": "approved"},
-        {"id": 6, "status": "rejected"},
-        {"id": 7, "status": "pending"},
-    ]
-    return Response(data)
 User = get_user_model()
 
 # 1. Submit Request (Staff or Student)
@@ -56,7 +29,8 @@ class CreateRequestView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        asset_id = self.request.data.get("asset") or None
+        # Support both 'asset' and 'asset_id' for frontend compatibility
+        asset_id = self.request.data.get("asset") or self.request.data.get("asset_id") or None
 
         request_obj = serializer.save(
             created_by=self.request.user,
@@ -113,11 +87,16 @@ def assign_technician(request, pk):
     except MaintenanceRequest.DoesNotExist:
         return Response({"error": "Request not found"}, status=404)
 
-    tech_id = request.data.get("technician_id")
+    # Support both 'technician_id' and 'technician' for flexibility
+    tech_id = request.data.get("technician_id") or request.data.get("technician")
+    
+    if not tech_id:
+        return Response({"error": "technician_id is required"}, status=400)
+
     technician = User.objects.filter(id=tech_id, role='technician').first()
 
     if not technician:
-        return Response({"error": "Technician not found"}, status=404)
+        return Response({"error": "User not found or is not a technician"}, status=404)
 
     maintenance.assigned_to = technician
     maintenance.status = 'assigned'
@@ -318,6 +297,14 @@ def monthly_analytics(request):
 @permission_classes([IsAdmin])
 def chart_data(request):
     data = {}
+
+    # 1. High-level Summary Metrics
+    data["summary"] = {
+        "total_users": User.objects.count(),
+        "total_technicians": User.objects.filter(role="technician").count(),
+        "total_requests": MaintenanceRequest.objects.count(),
+        "completed_requests": MaintenanceRequest.objects.filter(status="completed").count(),
+    }
 
     data["status_counts"] = {
         "pending": MaintenanceRequest.objects.filter(status="pending").count(),

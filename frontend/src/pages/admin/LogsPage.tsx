@@ -17,7 +17,7 @@ export default function LogsPage() {
   const [dateFilter, setDateFilter] = useState("");
 
   const fetchLogs = () => {
-    api.get("activity/")
+    api.get("activity/logs/")
       .then((res) => setLogs(res.data))
       .catch((err) => console.log(err));
   };

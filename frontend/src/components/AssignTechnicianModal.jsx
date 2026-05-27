@@ -6,7 +6,7 @@ export default function AssignTechnicianModal({ request, close, refresh }) {
   const [selectedTech, setSelectedTech] = useState(null);
 
   useEffect(() => {
-    api.get("users/all/")
+    api.get("maintenance/users/")
       .then((res) => {
         const techs = res.data.filter((u) => u.role === "technician");
         setTechnicians(techs);
@@ -18,7 +18,7 @@ export default function AssignTechnicianModal({ request, close, refresh }) {
     if (!selectedTech) return alert("Select a technician");
 
     try {
-      await api.put(`maintenance/assign/${request.id}/`, {
+      await api.post(`maintenance/assign/${request.id}/`, {
         technician_id: selectedTech,
       });
 
@@ -43,7 +43,7 @@ export default function AssignTechnicianModal({ request, close, refresh }) {
           <option>Select Technician</option>
           {technicians.map((tech) => (
             <option key={tech.id} value={tech.id}>
-              {tech.username} ({tech.email})
+              {tech.first_name} {tech.last_name} ({tech.username})
             </option>
           ))}
         </select>

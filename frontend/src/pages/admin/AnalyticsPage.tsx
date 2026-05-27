@@ -16,13 +16,13 @@ export default function AnalyticsPage() {
 
   const fetchStats = async () => {
     try {
-      const res = await api.get("maintenance/stats/");
+      const res = await api.get("maintenance/dashboard/");
       setStats(res.data);
 
-      const monthly = await api.get("maintenance/monthly/");
+      const monthly = await api.get("maintenance/analytics/monthly/");
       setByMonth(monthly.data);
 
-      const tech = await api.get("maintenance/technician/stats/");
+      const tech = await api.get("maintenance/technician-stats/");
       setByTechnician(tech.data);
     } catch (err) {
       console.log("Error loading analytics", err);
@@ -58,7 +58,7 @@ export default function AnalyticsPage() {
 
         <div className="bg-white p-4 rounded shadow">
           <h2 className="text-lg font-bold">Pending</h2>
-          <p className="text-3xl font-bold mt-2">{stats.pending}</p>
+          <p className="text-3xl font-bold mt-2">{stats.pending_requests}</p>
         </div>
       </div>
 
@@ -75,7 +75,7 @@ export default function AnalyticsPage() {
               datasets: [
                 {
                   label: "Requests",
-                  data: byMonth.map(m => m.count),
+                  data: byMonth.map(m => m.total_requests),
                 }
               ]
             }}
@@ -93,10 +93,10 @@ export default function AnalyticsPage() {
               datasets: [
                 {
                   data: [
-                    stats.pending,
-                    stats.assigned,
-                    stats.in_progress,
-                    stats.completed
+                    stats.pending ?? 0,
+                    stats.assigned ?? 0,
+                    stats.in_progress ?? 0,
+                    stats.completed ?? 0
                   ]
                 }
               ]
@@ -123,7 +123,7 @@ export default function AnalyticsPage() {
             {byTechnician.map((t) => (
               <tr key={t.technician_id} className="border-t">
                 <td className="p-2">{t.technician_name}</td>
-                <td className="p-2">{t.total}</td>
+                <td className="p-2">{t.total_assigned}</td>
                 <td className="p-2">{t.completed}</td>
                 <td className="p-2">{t.pending}</td>
               </tr>

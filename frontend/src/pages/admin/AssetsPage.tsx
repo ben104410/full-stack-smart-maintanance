@@ -21,7 +21,7 @@ export default function AssetsPage() {
   const [editAsset, setEditAsset] = useState<Asset | null>(null);
 
   const fetchAssets = () => {
-    api.get("assets/all/")
+    api.get("maintenance/assets/")
       .then(res => setAssets(res.data))
       .catch(err => console.log(err));
   };
@@ -34,7 +34,7 @@ export default function AssetsPage() {
     if (!confirm("Delete this asset?")) return;
 
     try {
-      await api.delete(`assets/delete/${id}/`);
+      await api.delete(`maintenance/assets/${id}/delete/`);
       fetchAssets();
     } catch (err) {
       alert("Failed to delete asset");
