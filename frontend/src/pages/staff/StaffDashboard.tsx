@@ -298,7 +298,7 @@ export default function StaffDashboard() {
               </button>
             </div>
           </form>
-        </Card>
+        </div>
       )}
 
       {/* History table */}
