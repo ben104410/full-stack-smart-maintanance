@@ -7,6 +7,7 @@ from .serializers import UserSerializer, RegisterSerializer, MyTokenObtainPairSe
 import uuid
 from utils.email_service import send_notification
 from django.contrib.auth.hashers import make_password
+from .permissions import IsAdmin
 
 
 class RegisterView(generics.CreateAPIView):
@@ -30,13 +31,13 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
 class ListUsersView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [IsAdmin]
 
 
 class UpdateUserRoleView(generics.UpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [IsAdmin]
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
@@ -50,7 +51,7 @@ class UpdateUserRoleView(generics.UpdateAPIView):
 class DeleteUserView(generics.DestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [IsAdmin]
 
 
 @api_view(['POST'])

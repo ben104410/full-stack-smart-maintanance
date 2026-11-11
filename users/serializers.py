@@ -40,6 +40,8 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    username_field = 'email'
+
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)

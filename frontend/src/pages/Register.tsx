@@ -55,8 +55,10 @@ export default function Register() {
       await auth.login(form.email, form.password);
       toast.success("Account created! Redirecting to landing page...");
       navigate("/", { replace: true });
-    } catch (err: any) {
-      const errorData = err.response?.data;
+    } catch (err: unknown) {
+      const errorData = typeof err === "object" && err !== null && "response" in err
+        ? (err as { response?: { data?: { detail?: string; email?: string[]; password?: string[]; username?: string[] } } }).response?.data
+        : undefined;
       const firstError =
         errorData?.email?.[0] ||
         errorData?.password?.[0] ||
@@ -76,122 +78,175 @@ export default function Register() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-sky-50 px-4 py-12 text-slate-900">
-      <div className="absolute inset-0 bg-[url('/images/bg-office.jpg')] bg-cover bg-center opacity-10" />
-      <div className="absolute inset-0 bg-gradient-to-b from-sky-100/80 via-sky-50/80 to-white/95" />
+    <div className="relative min-h-screen bg-slate-50 px-4 py-12 sm:px-6 lg:px-8 flex items-center justify-center">
+      <div className="absolute inset-0 bg-[radial-gradient(#0284c7_1px,transparent_1px)] [background-size:28px_28px] opacity-[0.04]" />
 
-      <div className="relative mx-auto w-full max-w-3xl overflow-hidden rounded-[2rem] border border-sky-200 bg-white/95 shadow-2xl backdrop-blur-xl">
-        <div className="grid gap-6 md:grid-cols-[1.1fr_0.9fr]">
-          <div className="bg-sky-600 px-10 py-12 text-white md:px-12 md:py-16">
-            <div className="mb-6 inline-flex items-center gap-3 rounded-3xl bg-sky-100/20 px-4 py-2 text-sm font-bold uppercase tracking-[0.25em] text-sky-100">
-              Pwani University
+      <div className="relative mx-auto w-full max-w-4xl overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-elevated">
+        <div className="grid gap-0 lg:grid-cols-[0.9fr_1.1fr]">
+          {/* Brand Left Column */}
+          <div className="hidden flex-col justify-between bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 p-12 text-white lg:flex">
+            <div>
+              <Link
+                to="/"
+                className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-300 transition hover:text-white"
+              >
+                ← Back to home
+              </Link>
+              <div className="mt-12 flex items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-500 text-lg font-black text-white shadow-md shadow-sky-500/30">
+                  P
+                </div>
+                <div>
+                  <span className="text-xl font-extrabold tracking-tight">
+                    Pwani<span className="text-sky-400">Maint</span>
+                  </span>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                    Registration Portal
+                  </p>
+                </div>
+              </div>
+
+              <h2 className="mt-8 text-3xl font-extrabold leading-tight tracking-tight text-white">
+                Join the Campus Facilities Workspace
+              </h2>
+              <p className="mt-4 text-sm leading-relaxed text-slate-300">
+                Register to submit maintenance requests, report facilities damage, receive job assignments,
+                and maintain university property.
+              </p>
             </div>
-            <h2 className="text-3xl font-black leading-tight md:text-4xl">
-              Create Your Account
-            </h2>
-            <p className="mt-4 max-w-sm text-sm leading-6 text-slate-200/90">
-              Join the Pwani Maintenance Portal and access asset tracking, task assignments, and institutional reporting.
-            </p>
+
+            <div className="border-t border-slate-700/60 pt-6 text-xs text-slate-400">
+              <p>Accounts are verified according to your university department.</p>
+            </div>
           </div>
 
-          <div className="px-8 py-10 md:px-12 md:py-14">
-            <form className="space-y-5" onSubmit={handleSubmit}>
-              <div className="grid gap-4 md:grid-cols-2">
-                <label className="block">
-                  <span className="mb-2 block text-sm font-semibold text-slate-700">First Name</span>
+          {/* Form Right Column */}
+          <div className="p-8 sm:p-12">
+            <div className="mb-6">
+              <Link
+                to="/"
+                className="mb-4 inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-800 lg:hidden"
+              >
+                ← Back to home
+              </Link>
+              <h2 className="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
+                Create Your Account
+              </h2>
+              <p className="mt-1 text-xs text-slate-500">
+                Fill in your details below to register on the maintenance platform.
+              </p>
+            </div>
+
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div>
+                  <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-600">
+                    First Name
+                  </label>
                   <input
                     type="text"
                     name="first_name"
                     value={form.first_name}
                     onChange={handleChange}
-                    placeholder="First Name"
+                    placeholder="e.g. John"
                     required
-                    className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm text-slate-800 outline-none transition focus:border-sky-600 focus:bg-white focus:ring-4 focus:ring-sky-500/10 font-medium"
                   />
-                </label>
-                <label className="block">
-                  <span className="mb-2 block text-sm font-semibold text-slate-700">Last Name</span>
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-600">
+                    Last Name
+                  </label>
                   <input
                     type="text"
                     name="last_name"
                     value={form.last_name}
                     onChange={handleChange}
-                    placeholder="Last Name"
+                    placeholder="e.g. Doe"
                     required
-                    className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm text-slate-800 outline-none transition focus:border-sky-600 focus:bg-white focus:ring-4 focus:ring-sky-500/10 font-medium"
                   />
-                </label>
+                </div>
               </div>
 
-              <label className="block">
-                <span className="mb-2 block text-sm font-semibold text-slate-700">Email Address</span>
+              <div>
+                <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-600">
+                  Email Address
+                </label>
                 <input
                   type="email"
                   name="email"
                   value={form.email}
                   onChange={handleChange}
-                  placeholder="you@example.com"
+                  placeholder="you@pwani.ac.ke or personal email"
                   required
-                  className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm text-slate-800 outline-none transition focus:border-sky-600 focus:bg-white focus:ring-4 focus:ring-sky-500/10 font-medium"
                 />
-              </label>
+              </div>
 
-              <label className="block">
-                <span className="mb-2 block text-sm font-semibold text-slate-700">Password</span>
-                <input
-                  type="password"
-                  name="password"
-                  value={form.password}
-                  onChange={handleChange}
-                  placeholder="Create a strong password"
-                  required
-                  className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
-                />
-                <p className="mt-2 text-xs text-slate-500">Must be at least 6 characters.</p>
-              </label>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div>
+                  <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-600">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    name="password"
+                    value={form.password}
+                    onChange={handleChange}
+                    placeholder="Min. 6 characters"
+                    required
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm text-slate-800 outline-none transition focus:border-sky-600 focus:bg-white focus:ring-4 focus:ring-sky-500/10 font-medium"
+                  />
+                </div>
 
-              <label className="block">
-                <span className="mb-2 block text-sm font-semibold text-slate-700">Confirm Password</span>
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  value={form.confirmPassword}
-                  onChange={handleChange}
-                  placeholder="Confirm your password"
-                  required
-                  className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
-                />
-              </label>
+                <div>
+                  <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-600">
+                    Confirm Password
+                  </label>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    value={form.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="Repeat password"
+                    required
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm text-slate-800 outline-none transition focus:border-sky-600 focus:bg-white focus:ring-4 focus:ring-sky-500/10 font-medium"
+                  />
+                </div>
+              </div>
 
-              <label className="block">
-                <span className="mb-2 block text-sm font-semibold text-slate-700">Register As</span>
+              <div>
+                <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-600">
+                  Campus Role
+                </label>
                 <select
                   name="role"
                   value={form.role}
                   onChange={handleChange}
-                  className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-sm font-semibold text-slate-800 outline-none transition focus:border-sky-600 focus:bg-white"
                 >
+                  <option value="student">Student / Community</option>
                   <option value="staff">Staff Member</option>
-                  <option value="technician">Technician</option>
+                  <option value="technician">Technician / Maintenance Personnel</option>
                   <option value="admin">Administrator</option>
                 </select>
-              </label>
+              </div>
 
               <button
                 disabled={loading}
-                className="w-full rounded-2xl bg-sky-600 px-5 py-3 text-base font-semibold text-white shadow-lg transition hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60"
+                className="mt-2 w-full rounded-xl bg-sky-600 py-3 text-sm font-bold text-white shadow-md shadow-sky-600/20 transition hover:bg-sky-700 active:scale-[0.99] disabled:opacity-50"
               >
-                {loading ? "Creating..." : "Create Account"}
+                {loading ? "Creating Account..." : "Complete Registration"}
               </button>
             </form>
 
-            <p className="mt-6 text-center text-sm text-slate-600">
-              Already have an account?{' '}
-              <Link to="/login" className="font-semibold text-sky-700 transition hover:text-sky-900">
-                Login here
+            <p className="mt-6 text-center text-xs text-slate-500">
+              Already registered?{' '}
+              <Link to="/login" className="font-bold text-sky-600 hover:underline">
+                Sign in to your account
               </Link>
             </p>
-            <p className="mt-6 text-center text-xs text-slate-500">© 2026 AssetTrack. All rights reserved.</p>
           </div>
         </div>
       </div>

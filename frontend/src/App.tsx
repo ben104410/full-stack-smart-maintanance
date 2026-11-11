@@ -16,8 +16,10 @@ import UsersPage from "./pages/user/UsersPage";
 import FeedbackPage from "./pages/FeedbackPage";
 import AssetsPage from "./pages/admin/AssetsPage";
 import RequestsPage from "./pages/admin/RequestPage";
+import RequestDetailsPage from "./pages/admin/RequestDetailsPage";
 import AnalyticsPage from "./pages/admin/AnalyticsPage";
 import ActivityLogsPage from "./pages/admin/ActivityLogsPage";
+import TaskDetailsPage from "./pages/technician/TaskDetailsPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Layout from "./layouts/Layout";
 
@@ -49,9 +51,11 @@ export default function App() {
         <Route path="/feedback" element={<ProtectedRoute><FeedbackPage /></ProtectedRoute>} />
         <Route path="/dashboard" element={<Navigate to="/portals" replace />} />
         
-        {/* Role-Based Dashboard Placeholders (To be developed) */}
-        <Route path="/staff/dashboard" element={<ProtectedRoute allowedRoles={['staff', 'admin']}><Layout><StaffDashboard /></Layout></ProtectedRoute>} />
+        {/* Role-Based Dashboard Routes */}
+        <Route path="/staff/dashboard" element={<ProtectedRoute allowedRoles={['staff', 'student', 'admin']}><Layout><StaffDashboard /></Layout></ProtectedRoute>} />
+        <Route path="/user/dashboard" element={<Navigate to="/staff/dashboard" replace />} />
         <Route path="/technician/dashboard" element={<ProtectedRoute allowedRoles={['technician', 'admin']}><Layout><TechnicianDashboard /></Layout></ProtectedRoute>} />
+        <Route path="/technician/tasks/:id" element={<ProtectedRoute allowedRoles={['technician', 'admin']}><Layout><TaskDetailsPage /></Layout></ProtectedRoute>} />
         <Route
           path="/admin"
           element={
@@ -60,13 +64,13 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/admin/users" element={<ProtectedRoute allowedRoles={['admin']}><UsersPage /></ProtectedRoute>} />
-        <Route path="/admin/assets" element={<ProtectedRoute allowedRoles={['admin']}><AssetsPage /></ProtectedRoute>} />
-        <Route path="/admin/requests" element={<ProtectedRoute allowedRoles={['admin']}><RequestsPage /></ProtectedRoute>} />
-        <Route path="/admin/analytics" element={<ProtectedRoute allowedRoles={['admin']}><AnalyticsPage /></ProtectedRoute>} />
-        <Route path="/admin/logs" element={<ProtectedRoute allowedRoles={['admin']}><ActivityLogsPage /></ProtectedRoute>} />
-        <Route path="/admin/requests/:id" element={<ProtectedRoute allowedRoles={['admin']}><RequestsPage /></ProtectedRoute>} />
-        <Route path="/users" element={<ProtectedRoute allowedRoles={['admin']}><UsersPage /></ProtectedRoute>} />
+        <Route path="/admin/users" element={<ProtectedRoute allowedRoles={['admin']}><Layout><UsersPage /></Layout></ProtectedRoute>} />
+        <Route path="/admin/assets" element={<ProtectedRoute allowedRoles={['admin']}><Layout><AssetsPage /></Layout></ProtectedRoute>} />
+        <Route path="/admin/requests" element={<ProtectedRoute allowedRoles={['admin']}><Layout><RequestsPage /></Layout></ProtectedRoute>} />
+        <Route path="/admin/requests/:id" element={<ProtectedRoute allowedRoles={['admin']}><Layout><RequestDetailsPage /></Layout></ProtectedRoute>} />
+        <Route path="/admin/analytics" element={<ProtectedRoute allowedRoles={['admin']}><Layout><AnalyticsPage /></Layout></ProtectedRoute>} />
+        <Route path="/admin/logs" element={<ProtectedRoute allowedRoles={['admin']}><Layout><ActivityLogsPage /></Layout></ProtectedRoute>} />
+        <Route path="/users" element={<ProtectedRoute allowedRoles={['admin']}><Layout><UsersPage /></Layout></ProtectedRoute>} />
       </Routes>
     </Router>
   );

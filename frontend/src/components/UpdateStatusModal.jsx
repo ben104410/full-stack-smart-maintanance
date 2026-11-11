@@ -1,73 +1,100 @@
 import { useState } from "react";
 import api from "../api/axios";
+import toast from "react-hot-toast";
+import { X, CheckCircle2, Clock, Wrench } from "lucide-react";
 
 export default function UpdateStatusModal({ task, close, refresh }) {
-  const [status, setStatus] = useState(task.status);
-  const [notes, setNotes] = useState("");
-  const [beforeImage, setBeforeImage] = useState(null);
-  const [afterImage, setAfterImage] = useState(null);
+  const [status, setStatus] = useState(task?.status || "in_progress");
+  const [notes, setNotes] = useState(task?.technician_notes || "");
+  const [submitting, setSubmitting] = useState(false);
 
-  const updateStatus = async (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
-
-    if (!task || !task.id) {
-      console.error("UpdateStatusModal: Task or Task ID is missing", task);
-      alert("Error: Task ID is missing. Please refresh and try again.");
-      return;
-    }
-
-    const form = new FormData();
-    form.append("status", status);
-    form.append("technician_notes", notes);
-    if (beforeImage) form.append("before_image", beforeImage);
-    if (afterImage) form.append("after_image", afterImage);
+    setSubmitting(true);
 
     try {
-      // Note: verify if the endpoint should be 'update' or 'update-status'
-      await api.put(`maintenance/update-status/${task.id}/`, form);
-      refresh();
+      await api.post(`maintenance/update-status/${task.id}/`, {
+        status,
+        technician_notes: notes,
+      });
+
+      toast.success(`Task status updated to ${status.replace("_", " ")}`);
+      if (typeof refresh === "function") refresh();
       close();
     } catch (err) {
-      alert("Failed to update status");
+      console.error(err);
+      toast.error("Failed to update task status");
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-      <form className="bg-white p-6 rounded shadow w-96" onSubmit={updateStatus}>
-        <h2 className="text-xl font-bold mb-3">
-          Update Task — {task.title}
-        </h2>
-
-        <select
-          className="w-full p-2 border mb-3"
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-        >
-          <option>In Progress</option>
-          <option>Completed</option>
-        </select>
-
-        <textarea
-          placeholder="Technician notes..."
-          className="w-full p-2 border mb-3"
-          rows="3"
-          onChange={(e) => setNotes(e.target.value)}
-        />
-
-        <label className="block mb-1 font-medium">Before Image:</label>
-        <input type="file" className="mb-3" onChange={(e) => setBeforeImage(e.target.files[0])} />
-
-        <label className="block mb-1 font-medium">After Image:</label>
-        <input type="file" className="mb-3" onChange={(e) => setAfterImage(e.target.files[0])} />
-
-        <div className="flex justify-end gap-2">
-          <button type="button" onClick={close} className="p-2 bg-gray-500 text-white rounded">
-            Cancel
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm">
+      <div className="w-full max-w-md rounded-3xl border border-slate-200/80 bg-white p-6 shadow-2xl">
+        <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-50 text-sky-600">
+              <Wrench size={18} />
+            </div>
+            <div>
+              <h2 className="text-base font-extrabold text-slate-900">Update Task Status</h2>
+              <p className="text-xs text-slate-400 truncate max-w-[240px]">{task?.title || "Work Order"}</p>
+            </div>
+          </div>
+          <button onClick={close} className="rounded-xl p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600">
+            <X size={16} />
           </button>
-          <button className="p-2 bg-blue-600 text-white rounded">Update</button>
         </div>
-      </form>
+
+        <form onSubmit={handleUpdate} className="mt-5 space-y-4">
+          <div>
+            <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-600">
+              Operational Status
+            </label>
+            <select
+              className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-3.5 py-2.5 text-xs font-semibold text-slate-800 outline-none transition focus:border-sky-600 focus:bg-white"
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+            >
+              <option value="pending">Pending</option>
+              <option value="assigned">Assigned</option>
+              <option value="in_progress">In Progress</option>
+              <option value="completed">Completed</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-600">
+              Service Notes &amp; Observations
+            </label>
+            <textarea
+              placeholder="Describe actions taken, replaced parts, or testing results..."
+              className="w-full rounded-xl border border-slate-200 bg-slate-50/50 p-3.5 text-xs text-slate-800 outline-none transition focus:border-sky-600 focus:bg-white focus:ring-4 focus:ring-sky-500/10 font-medium min-h-[100px]"
+              rows="3"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+            />
+          </div>
+
+          <div className="flex justify-end gap-2 border-t border-slate-100 pt-4">
+            <button
+              type="button"
+              onClick={close}
+              className="rounded-xl border border-slate-200 px-4 py-2 text-xs font-bold text-slate-600 transition hover:bg-slate-50"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={submitting}
+              className="rounded-xl bg-sky-600 px-5 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-sky-700 disabled:opacity-50"
+            >
+              {submitting ? "Saving..." : "Save Status"}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

@@ -50,6 +50,27 @@ class UpdateAssetView(generics.UpdateAPIView):
         )
 
 
+class DeleteAssetView(generics.DestroyAPIView):
+    queryset = Asset.objects.all()
+    serializer_class = AssetSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_destroy(self, instance):
+        asset_name = instance.name
+        instance.delete()
+        ActivityLog.objects.create(
+            user=self.request.user,
+            action="Deleted Asset",
+            details=f"Deleted asset: {asset_name}"
+        )
+
+
+class DetailAssetView(generics.RetrieveAPIView):
+    queryset = Asset.objects.all()
+    serializer_class = AssetSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
 def generate_qr(asset):
     qr = qrcode.make(f"https://your-domain.com/api/assets/{asset.id}/")
     stream = BytesIO()

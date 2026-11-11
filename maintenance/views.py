@@ -78,8 +78,14 @@ class ListMyRequestsView(generics.ListAPIView):
         return MaintenanceRequest.objects.filter(created_by=self.request.user).order_by('-created_at')
 
 
+class RequestDetailView(generics.RetrieveUpdateAPIView):
+    queryset = MaintenanceRequest.objects.all()
+    serializer_class = MaintenanceRequestSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
 # 3. Assign Technician (Admin only)
-@api_view(['POST'])
+@api_view(['POST', 'PUT'])
 @permission_classes([IsAdmin])
 def assign_technician(request, pk):
     try:
@@ -130,19 +136,25 @@ def assign_technician(request, pk):
 
 
 # 4. Technician Updates Task
-@api_view(['POST'])
+@api_view(['POST', 'PUT'])
 @permission_classes([permissions.IsAuthenticated])
 def update_status(request, pk):
     task = get_object_or_404(MaintenanceRequest, pk=pk)
 
+    is_admin_user = (
+        getattr(request.user, "role", None) == "admin"
+        or getattr(request.user, "is_staff", False)
+        or getattr(request.user, "is_superuser", False)
+    )
+
     # only assigned technician or admin can update status
-    if request.user != task.assigned_to and not request.user.is_staff:
+    if request.user != task.assigned_to and not is_admin_user:
         return Response({"error": "Not authorized to update this task"}, status=403)
 
     new_status = request.data.get("status")
 
-    if new_status not in ['in_progress', 'completed']:
-        return Response({"error": "Invalid status"}, status=400)
+    if new_status not in ['pending', 'assigned', 'in_progress', 'completed']:
+        return Response({"error": f"Invalid status: {new_status}"}, status=400)
 
     task.status = new_status
 
@@ -165,12 +177,12 @@ def update_status(request, pk):
         message=f"Your maintenance request '{task.title}' is now {new_status.replace('_', ' ')}"
     )
 
-    return Response({"message": "Status updated successfully"})
+    return Response({"message": "Status updated successfully", "status": new_status})
 
 
 # 5. Export maintenance requests to CSV (Admin only)
 @api_view(['GET'])
-@permission_classes([permissions.IsAdminUser])
+@permission_classes([IsAdmin])
 def export_requests_csv(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="maintenance_requests.csv"'
@@ -373,15 +385,25 @@ def my_tasks(request):
     - Admins see all tasks.
     - Other users see tasks they created.
     """
-    if request.user.role == "technician":
+    if getattr(request.user, "role", None) == "technician":
         tasks = MaintenanceRequest.objects.filter(assigned_to=request.user).order_by('-created_at')
-    elif request.user.role == "admin":
+    elif getattr(request.user, "role", None) == "admin" or request.user.is_staff or request.user.is_superuser:
         tasks = MaintenanceRequest.objects.all().order_by('-created_at')
     else: # student, staff, etc.
         tasks = MaintenanceRequest.objects.filter(created_by=request.user).order_by('-created_at')
 
     data = [
-        {"title": t.title, "status": t.status, "created_at": t.created_at.strftime("%Y-%m-%d %H:%M:%S")}
+        {
+            "id": t.id,
+            "title": t.title,
+            "description": t.description,
+            "status": t.status,
+            "priority": t.priority,
+            "location": t.location,
+            "asset_name": t.asset.name if t.asset else "General",
+            "created_by_username": t.created_by.username,
+            "created_at": t.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+        }
         for t in tasks
     ]
 

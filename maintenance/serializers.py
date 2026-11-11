@@ -1,16 +1,22 @@
 from rest_framework import serializers
 from .models import MaintenanceRequest, Feedback
+from users.serializers import UserSerializer
+from assets.serializers import AssetSerializer
 
 class MaintenanceRequestSerializer(serializers.ModelSerializer):
-	created_by_username = serializers.CharField(source='created_by.username', read_only=True)
-	assigned_to_username = serializers.CharField(source='assigned_to.username', read_only=True)
-	asset_name = serializers.CharField(source='asset.name', read_only=True)
-	before_image = serializers.ImageField(source='image', read_only=True)
+    created_by_username = serializers.CharField(source='created_by.username', read_only=True)
+    assigned_to_username = serializers.CharField(source='assigned_to.username', read_only=True)
+    asset_name = serializers.CharField(source='asset.name', read_only=True)
+    before_image = serializers.ImageField(source='image', read_only=True)
+    user = UserSerializer(source='created_by', read_only=True)
+    technician = UserSerializer(source='assigned_to', read_only=True)
+    asset_details = AssetSerializer(source='asset', read_only=True)
+    image = serializers.ImageField(required=False, allow_null=True)
 
-	class Meta:
-		model = MaintenanceRequest
-		fields = '__all__'
-		read_only_fields = ['created_by', 'status', 'created_at', 'updated_at']
+    class Meta:
+        model = MaintenanceRequest
+        fields = '__all__'
+        read_only_fields = ['created_by', 'status', 'created_at', 'updated_at']
 
 class FeedbackSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)

@@ -31,10 +31,13 @@ def mark_as_read(request, pk):
 
 
 def send_notification(email, subject, message):
-    send_mail(
-        subject,
-        message,
-        settings.EMAIL_HOST_USER,
-        [email],
-        fail_silently=False,
-    )
+    try:
+        send_mail(
+            subject,
+            message,
+            getattr(settings, 'EMAIL_HOST_USER', None) or 'noreply@pwani.ac.ke',
+            [email],
+            fail_silently=True,
+        )
+    except Exception:
+        pass

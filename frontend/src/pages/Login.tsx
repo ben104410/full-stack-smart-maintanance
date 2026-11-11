@@ -2,6 +2,7 @@ import { type ChangeEvent, type FormEvent, useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom"
 import { AuthContext } from "../context/AuthContext"
 import toast from "react-hot-toast"
+import { ArrowLeft, ArrowRight, Eye, EyeOff, LockKeyhole, ShieldCheck } from "lucide-react";
 
 export default function Login() {
   const auth = useContext(AuthContext)
@@ -17,6 +18,7 @@ export default function Login() {
     password: "",
   })
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -30,8 +32,10 @@ export default function Login() {
       await login(form.email, form.password)
       toast.success("Welcome to the Pwani University Portal");
       navigate("/portals", { replace: true });
-    } catch (err: any) {
-      const errorData = err.response?.data;
+    } catch (err: unknown) {
+      const errorData = typeof err === "object" && err !== null && "response" in err
+        ? (err as { response?: { data?: { detail?: string; email?: string[]; password?: string[]; non_field_errors?: string[] } } }).response?.data
+        : undefined;
       const firstError =
         errorData?.detail ||
         errorData?.email?.[0] ||
@@ -39,7 +43,7 @@ export default function Login() {
         errorData?.non_field_errors?.[0] ||
         "Authentication failed. Please verify your credentials.";
 
-      console.error("Login failed:", err); // Add this line for debugging
+      console.error("Login failed:", err);
       toast.error(firstError);
     } finally {
       setIsSubmitting(false);
@@ -47,72 +51,144 @@ export default function Login() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-sky-50 px-4 py-12 text-slate-900">
-      <div className="absolute inset-0 bg-[url('/images/bg-office.jpg')] bg-cover bg-center opacity-10" />
-      <div className="absolute inset-0 bg-gradient-to-b from-sky-100/80 via-sky-50/80 to-white/95" />
+    <div className="relative flex min-h-screen items-center justify-center bg-slate-50 px-4 py-12 sm:px-6 lg:px-8">
+      {/* Background decoration */}
+      <div className="absolute inset-0 bg-[radial-gradient(#0284c7_1px,transparent_1px)] [background-size:28px_28px] opacity-[0.04]" />
 
-      <div className="relative mx-auto w-full max-w-md overflow-hidden rounded-[2rem] border border-sky-200 bg-white/95 shadow-2xl backdrop-blur-xl">
-        <div className="px-8 py-10 md:px-10 md:py-12">
-          <div className="mb-8 text-center">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-3xl bg-sky-600 text-white text-3xl font-black shadow-lg">
-              P
+      <div className="relative mx-auto grid w-full max-w-5xl overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-elevated lg:grid-cols-[0.9fr_1.1fr]">
+        {/* Left Side: Brand Showcase */}
+        <div className="relative hidden flex-col justify-between overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 p-12 text-white lg:flex">
+          <div className="absolute -right-24 -top-24 h-64 w-64 rounded-full bg-sky-500/20 blur-3xl" />
+          <div className="relative">
+            <Link
+              to="/"
+              className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-300 transition hover:text-white"
+            >
+              <ArrowLeft size={15} /> Back to home
+            </Link>
+
+            <div className="mt-14 flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-sky-500 text-xl font-black text-white shadow-md shadow-sky-500/30">
+                P
+              </div>
+              <div>
+                <span className="text-xl font-extrabold tracking-tight">
+                  Pwani<span className="text-sky-400">Maint</span>
+                </span>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                  Campus Facilities OS
+                </p>
+              </div>
             </div>
-            <h2 className="text-3xl font-black text-slate-900">Sign In</h2>
-            <p className="mt-2 text-sm text-slate-500">Access the Pwani University maintenance portal</p>
+
+            <h1 className="mt-8 text-3xl font-extrabold leading-tight tracking-tight text-white">
+              Centralized facilities care for university operations.
+            </h1>
+            <p className="mt-4 text-sm leading-relaxed text-slate-300">
+              Submit work orders, inspect assets via QR codes, assign technician teams, and verify
+              completed repairs in one place.
+            </p>
           </div>
 
-          <form className="space-y-5" onSubmit={handleSubmit}>
-            <label className="block">
-              <span className="mb-2 block text-sm font-semibold text-slate-700">Email Address</span>
+          <div className="relative space-y-3.5 border-t border-slate-700/60 pt-8 text-xs font-semibold text-slate-300">
+            <div className="flex items-center gap-3">
+              <ShieldCheck size={18} className="text-sky-400" />
+              <span>Role-Based Authentication (Admin, Staff, Technician, Student)</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <LockKeyhole size={18} className="text-teal-400" />
+              <span>Audit Trail &amp; Verification Timestamping</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Side: Sign-in Form */}
+        <div className="p-8 sm:p-12 lg:p-14">
+          <div className="mb-8">
+            <Link
+              to="/"
+              className="mb-6 inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-800 lg:hidden"
+            >
+              <ArrowLeft size={14} /> Back to home
+            </Link>
+            <div className="inline-flex items-center gap-2 rounded-full bg-sky-50 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-sky-700">
+              <span>Verified Access</span>
+            </div>
+            <h2 className="mt-3 text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
+              Sign in to your account
+            </h2>
+            <p className="mt-1.5 text-sm text-slate-500">
+              Enter your university email address and password to continue.
+            </p>
+          </div>
+
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            <div>
+              <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-600">
+                Email Address
+              </label>
               <input
                 type="email"
                 name="email"
-                placeholder="you@example.com"
+                placeholder="you@pwani.ac.ke or personal email"
+                autoComplete="email"
                 value={form.email}
                 onChange={handleChange}
                 required
-                className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-sky-600 focus:bg-white focus:ring-4 focus:ring-sky-500/10 font-medium"
               />
-            </label>
+            </div>
 
-            <label className="block">
-              <span className="mb-2 block text-sm font-semibold text-slate-700">Password</span>
-              <input
-                type="password"
-                name="password"
-                placeholder="Enter your password"
-                value={form.password}
-                onChange={handleChange}
-                required
-                className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
-              />
-            </label>
-
-            <button
-              type="button"
-              onClick={() => toast.error("Please contact the IT department at support@pwani-maint.local to reset your password.")}
-              className="text-left text-sm font-medium text-slate-500 hover:text-sky-600 transition-colors"
-            >
-              Forgot password?
-            </button>
+            <div>
+              <div className="mb-1.5 flex items-center justify-between">
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-600">
+                  Password
+                </label>
+                <button
+                  type="button"
+                  onClick={() => toast.error("Please contact your IT department or use your registration credentials.")}
+                  className="text-xs font-semibold text-sky-600 hover:underline"
+                >
+                  Forgot password?
+                </button>
+              </div>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="••••••••"
+                  autoComplete="current-password"
+                  value={form.password}
+                  onChange={handleChange}
+                  required
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 pr-11 text-sm text-slate-800 outline-none transition focus:border-sky-600 focus:bg-white focus:ring-4 focus:ring-sky-500/10 font-medium"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
 
             <button
               disabled={isSubmitting}
-              className="w-full rounded-2xl bg-sky-600 px-5 py-3 text-base font-semibold text-white shadow-lg transition hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-sky-600 py-3.5 text-sm font-bold text-white shadow-md shadow-sky-600/20 transition hover:bg-sky-700 active:scale-[0.99] disabled:opacity-50"
               type="submit"
             >
-              {isSubmitting ? "Logging in..." : "Login"}
+              {isSubmitting ? "Signing in..." : <>Sign In to Workspace <ArrowRight size={16} /></>}
             </button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-slate-600">
-            Don’t have an account?{' '}
-            <Link to="/register" className="font-semibold text-sky-700 transition hover:text-sky-900">
-              Create Account
+          <div className="mt-8 border-t border-slate-100 pt-6 text-center text-sm text-slate-500">
+            <span>Don&rsquo;t have an account yet? </span>
+            <Link to="/register" className="font-bold text-sky-600 hover:underline">
+              Create an account
             </Link>
-          </p>
-
-          <p className="mt-8 text-center text-xs text-slate-500">© 2026 AssetTrack. All rights reserved.</p>
+          </div>
         </div>
       </div>
     </div>

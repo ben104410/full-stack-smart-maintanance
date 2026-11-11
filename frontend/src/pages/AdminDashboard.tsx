@@ -1,16 +1,31 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import api from "../api/axios";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { AuthContext } from "../context/AuthContext";
+import {
+  Users as UsersIcon,
+  Wrench,
+  ClipboardList,
+  CheckCircle2,
+  RefreshCw,
+  TrendingUp,
+  Activity,
+  ArrowRight
+} from "lucide-react";
 
 interface Stats {
   total_users: number;
-  technicians: number;
+  technicians?: number;
+  total_technicians?: number;
   total_tasks: number;
+  pending_requests?: number;
+  in_progress?: number;
   completed_tasks: number;
 }
 
 interface Task {
+  id: number;
   title: string;
   assigned_to: string;
   status: string;
@@ -25,6 +40,8 @@ interface User {
 }
 
 export default function AdminDashboard() {
+  const auth = useContext(AuthContext);
+  const user = auth?.user;
   const [stats, setStats] = useState<Stats | null>(null);
   const [recentTasks, setRecentTasks] = useState<Task[]>([]);
   const [users, setUsers] = useState<User[]>([]);
@@ -54,117 +71,232 @@ export default function AdminDashboard() {
     fetchDashboardData();
   }, []);
 
-  if (loading) {
+  if (!user || user.role !== "admin") {
+    return <Navigate to="/portals" replace />;
+  }
+
+  if (loading && !stats) {
     return (
       <div className="flex h-96 items-center justify-center">
-        <div className="h-12 w-12 animate-spin rounded-full border-4 border-sky-500 border-t-transparent"></div>
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-sky-600 border-t-transparent" />
       </div>
     );
   }
 
+  const statCards = [
+    {
+      label: "Registered Users",
+      value: stats?.total_users ?? 0,
+      sub: "Active accounts",
+      icon: UsersIcon,
+      color: "text-sky-600",
+      bg: "bg-sky-50",
+    },
+    {
+      label: "Technicians On Duty",
+      value: stats?.technicians ?? stats?.total_technicians ?? 0,
+      sub: "Assigned to work orders",
+      icon: Wrench,
+      color: "text-teal-600",
+      bg: "bg-teal-50",
+    },
+    {
+      label: "Total Work Orders",
+      value: stats?.total_tasks ?? 0,
+      sub: `${stats?.in_progress ?? 0} in progress`,
+      icon: ClipboardList,
+      color: "text-indigo-600",
+      bg: "bg-indigo-50",
+    },
+    {
+      label: "Completed & Verified",
+      value: stats?.completed_tasks ?? 0,
+      sub: stats?.total_tasks ? `${Math.round(((stats.completed_tasks || 0) / stats.total_tasks) * 100)}% resolution rate` : "No requests",
+      icon: CheckCircle2,
+      color: "text-emerald-600",
+      bg: "bg-emerald-50",
+    },
+  ];
+
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
+      {/* Top Banner */}
+      <div className="flex flex-col gap-4 border-b border-slate-200/80 pb-6 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-black text-sky-950 uppercase tracking-tight">Admin <span className="text-sky-600">Dashboard</span></h1>
-          <p className="text-slate-500 font-medium">Global oversight of Pwani University Maintenance operations.</p>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-sky-600">
+              Operations Control
+            </span>
+            <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
+              Live Feed
+            </span>
+          </div>
+          <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
+            Campus Administration
+          </h1>
+          <p className="mt-1 text-xs text-slate-500">
+            Real-time health, incident queue, and equipment inventory across Pwani University.
+          </p>
         </div>
-        <div className="flex items-center gap-3">
-          <button 
+
+        <div className="flex flex-wrap items-center gap-2.5">
+          <button
             onClick={fetchDashboardData}
-            className="p-2.5 rounded-xl border border-sky-200 hover:bg-sky-50 transition-colors text-sky-600"
-            title="Refresh Data"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 shadow-sm transition hover:bg-slate-50"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+            <RefreshCw size={14} /> Refresh
           </button>
-          <Link to="/admin/analytics" className="bg-sky-700 text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-sky-800 transition-all shadow-lg">
-            View Analytics
+          <Link
+            to="/admin/analytics"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 shadow-sm transition hover:bg-slate-50"
+          >
+            <TrendingUp size={14} /> Analytics
           </Link>
-          <Link to="/feedback" className="bg-slate-100 text-slate-700 px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-slate-200 transition-all">
-            Feedback
+          <Link
+            to="/admin/requests"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-sky-600 px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-sky-700"
+          >
+            <ClipboardList size={14} /> All Work Orders
           </Link>
         </div>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {[
-          { label: "Total Users", value: stats?.total_users, color: "text-blue-600", bg: "bg-blue-50" },
-          { label: "Technicians", value: stats?.technicians, color: "text-sky-600", bg: "bg-sky-50" },
-          { label: "Total Requests", value: stats?.total_tasks, color: "text-purple-600", bg: "bg-purple-50" },
-          { label: "Completed", value: stats?.completed_tasks, color: "text-emerald-600", bg: "bg-emerald-50" },
-        ].map((item) => (
-          <div key={item.label} className="bg-white p-6 rounded-[2rem] border border-sky-100 shadow-sm">
-            <p className="text-xs font-black uppercase tracking-widest text-slate-400 mb-2">{item.label}</p>
-            <p className={`text-4xl font-black ${item.color}`}>{item.value ?? 0}</p>
-          </div>
-        ))}
+      {/* KPI Stats Grid */}
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {statCards.map((item) => {
+          const Icon = item.icon;
+          return (
+            <div
+              key={item.label}
+              className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-card transition-all hover:shadow-elevated"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  {item.label}
+                </span>
+                <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${item.bg} ${item.color}`}>
+                  <Icon size={20} />
+                </div>
+              </div>
+              <p className="mt-4 text-3xl font-extrabold text-slate-900">{item.value}</p>
+              <p className="mt-1 text-xs font-medium text-slate-400">{item.sub}</p>
+            </div>
+          );
+        })}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Recent Tasks */}
-        <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
-          <div className="p-8 border-b border-slate-50 flex justify-between items-center">
-            <h2 className="text-xl font-black text-sky-950">Recent Activities</h2>
-            <span className="text-[10px] font-black uppercase tracking-widest bg-sky-100 text-sky-600 px-3 py-1 rounded-full">Live</span>
+      {/* Content Split: Recent Work Orders & System Users */}
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        {/* Recent Work Orders (2 Columns) */}
+        <div className="rounded-2xl border border-slate-200/80 bg-white shadow-card overflow-hidden lg:col-span-2">
+          <div className="flex items-center justify-between border-b border-slate-100 p-6">
+            <div className="flex items-center gap-2.5">
+              <Activity size={18} className="text-sky-600" />
+              <h2 className="text-base font-bold text-slate-900">Recent Incident Reports</h2>
+            </div>
+            <Link
+              to="/admin/requests"
+              className="text-xs font-bold text-sky-600 hover:text-sky-700 flex items-center gap-1"
+            >
+              View Full Registry <ArrowRight size={13} />
+            </Link>
           </div>
+
           <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead className="bg-slate-50 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+            <table className="w-full text-left text-sm">
+              <thead className="border-b border-slate-100 bg-slate-50 text-[10px] font-bold uppercase tracking-wider text-slate-500">
                 <tr>
-                  <th className="px-8 py-4">Title</th>
-                  <th className="px-8 py-4">Assigned To</th>
-                  <th className="px-8 py-4">Status</th>
+                  <th className="px-6 py-3.5">Title</th>
+                  <th className="px-6 py-3.5">Assigned Technician</th>
+                  <th className="px-6 py-3.5">Status</th>
+                  <th className="px-6 py-3.5 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-50">
-                {recentTasks.map((task, i) => (
-                  <tr key={i} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-8 py-4 font-bold text-sm text-slate-700">{task.title}</td>
-                    <td className="px-8 py-4 text-sm text-slate-500">{task.assigned_to}</td>
-                    <td className="px-8 py-4">
-                      <span className={`text-[10px] font-black uppercase px-2 py-1 rounded-md ${
-                        task.status === 'completed' ? 'bg-emerald-100 text-emerald-700' : 
-                        task.status === 'in_progress' ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-600'
-                      }`}>
-                        {task.status.replace('_', ' ')}
-                      </span>
+              <tbody className="divide-y divide-slate-100 text-xs">
+                {recentTasks.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="py-10 text-center text-slate-400">
+                      No maintenance incidents logged yet.
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  recentTasks.map((task) => (
+                    <tr key={task.id} className="transition-colors hover:bg-slate-50/80">
+                      <td className="px-6 py-4 font-bold text-slate-900">{task.title || "Untitled"}</td>
+                      <td className="px-6 py-4 text-slate-600">
+                        {task.assigned_to && task.assigned_to !== "Unassigned" ? (
+                          <span className="font-semibold text-teal-700">{task.assigned_to}</span>
+                        ) : (
+                          <span className="italic text-slate-400">Unassigned</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4">
+                        <span
+                          className={`inline-flex rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                            task.status === "completed"
+                              ? "bg-emerald-50 text-emerald-700 border border-emerald-200/60"
+                              : task.status === "in_progress"
+                              ? "bg-sky-50 text-sky-700 border border-sky-200/60"
+                              : task.status === "assigned"
+                              ? "bg-blue-50 text-blue-700 border border-blue-200/60"
+                              : "bg-amber-50 text-amber-700 border border-amber-200/60"
+                          }`}
+                        >
+                          {(task.status || "pending").replace("_", " ")}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <Link
+                          to={`/admin/requests/${task.id}`}
+                          className="font-bold text-sky-600 hover:underline"
+                        >
+                          Manage &rarr;
+                        </Link>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
         </div>
 
-        {/* Users List */}
-        <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
-          <div className="p-8 border-b border-slate-50">
-            <h2 className="text-xl font-black text-sky-950">System Users</h2>
+        {/* System Users Roster (1 Column) */}
+        <div className="rounded-2xl border border-slate-200/80 bg-white shadow-card overflow-hidden">
+          <div className="flex items-center justify-between border-b border-slate-100 p-6">
+            <h2 className="text-base font-bold text-slate-900">Campus Directory</h2>
+            <Link to="/admin/users" className="text-xs font-bold text-sky-600 hover:underline">
+              All Users &rarr;
+            </Link>
           </div>
-          <div className="p-4 space-y-4">
-            {users.slice(0, 6).map((user, i) => (
-              <div key={i} className="flex items-center justify-between p-4 rounded-2xl hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-sky-700 rounded-xl flex items-center justify-center text-white font-bold">
-                    {user.username[0].toUpperCase()}
+
+          <div className="divide-y divide-slate-100 p-2">
+            {users.slice(0, 5).map((u, i) => (
+              <div key={i} className="flex items-center justify-between p-3.5 hover:bg-slate-50 rounded-xl transition">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 font-bold text-xs text-slate-700">
+                    {u.username?.[0]?.toUpperCase() || "U"}
                   </div>
                   <div>
-                    <p className="font-bold text-sm text-slate-800">{user.username}</p>
-                    <p className="text-xs text-slate-500">{user.email}</p>
+                    <p className="font-bold text-xs text-slate-900">{u.username}</p>
+                    <p className="text-[11px] text-slate-400 truncate max-w-[140px]">{u.email}</p>
                   </div>
                 </div>
-                <span className={`text-[9px] font-black uppercase tracking-tighter px-2 py-1 rounded-lg border ${
-                  user.role === 'admin' ? 'border-red-200 text-red-600 bg-red-50' : 
-                  user.role === 'technician' ? 'border-sky-200 text-sky-600 bg-sky-50' : 'border-slate-200 text-slate-500'
-                }`}>
-                  {user.role}
+                <span
+                  className={`rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${
+                    u.role === "admin"
+                      ? "bg-purple-50 text-purple-700 border border-purple-200"
+                      : u.role === "technician"
+                      ? "bg-teal-50 text-teal-700 border border-teal-200"
+                      : u.role === "staff"
+                      ? "bg-blue-50 text-blue-700 border border-blue-200"
+                      : "bg-slate-100 text-slate-600"
+                  }`}
+                >
+                  {u.role}
                 </span>
               </div>
             ))}
-            <Link to="/admin/users" className="block text-center py-4 text-xs font-black uppercase tracking-widest text-sky-600 hover:text-sky-800 transition-colors">
-              View All Users →
-            </Link>
           </div>
         </div>
       </div>
